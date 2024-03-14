@@ -3,6 +3,7 @@ from llama_index.llms.openai import OpenAI
 import os
 import pandas as pd
 from tqdm import tqdm
+from prompt_templates import few_shot
 
 
 def run_thread(model, question):
@@ -26,6 +27,13 @@ def compile_question(design, criterion, material, question_type):
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
                    f"How well do you think {material} would perform in this application? Answer on a scale of 1-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words."
+    elif question_type == 'few-shot':
+        question = f"You are a material science and design engineer expert.\n" \
+                   f"Below are two examples of how materials would perform from 1-10 given a design and a criterion:\n" \
+                   f"{few_shot}\n" \
+                   f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
+                   f"How well do you think {material} would perform in this application? Answer on a scale of 1-10, " \
+                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
     else:
         raise ValueError("Invalid question type")
     return question
@@ -51,6 +59,8 @@ def append_results(results, design, criterion, material, response):
 
 
 if __name__ == '__main__':
+    overwrite_results = False
+
     materials = [
         "Steel",
         "Aluminium",
@@ -62,24 +72,26 @@ if __name__ == '__main__':
         # "Thermoset",
         # "Composite"
     ]
-
     designs = [
         "Kitchen Utensil Grip",
-        "Spacecraft Component",
+        # "Spacecraft Component",
         # "Underwater Component",
         # "Safety Helmet"
     ]
-
     criteria = [
         "Lightweight",
-        "Heat resistant",
+        # "Heat resistant",
         # "Corrosion resistant",
         # "High strength"
     ]
 
-    for question_type in ['zero_shot']:  # , 'context', 'parallel', 'chain-of-thought', "fine-tuned", 'temperature']:
-        for model in ['gpt-4-0125-preview']:  # , 'mixtral']:
-            #initialize results dataframe
+    for question_type in ['zero_shot', 'few-shot']:  # , 'parallel', 'chain-of-thought', 'temperature']:
+        for model in ['gpt-4-0125-preview']:  # , 'mixtral', 'melm']:
+            # if results exist and we don't want to overwrite, skip
+            if os.path.exists(f"answers/{question_type}_{model}.csv") and not overwrite_results:
+                continue
+
+            # initialize results dataframe
             results = pd.DataFrame(columns=['design', 'criteria', 'material', 'response'])
 
             if question_type == 'parallel':
@@ -96,4 +108,6 @@ if __name__ == '__main__':
 
                         results = append_results(results, design, criterion, material, response)
 
+            if not os.path.exists("answers"):
+                os.makedirs("answers")
             results.to_csv(f"answers/{question_type}_{model}.csv", index=False)
