@@ -6,6 +6,12 @@ JCISE publication
 ## Abstract
 
 ## Tree
+```
+📦 LLM-for-Material-Selection
+├─ data  # Data from the survey responses
+├─ evaluation  # Scripts used to evaluate the results
+└─ generation  # Scripts used to generate the results
+```
 
 ## Installation
 `
