@@ -34,28 +34,50 @@ def compile_question(design, criterion, material, question_type):
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
                    f"How well do you think {material} would perform in this application? Answer on a scale of 1-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
+    elif question_type == 'parallel':
+        question = f"You are a material science and design engineer expert.\n" \
+                   f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
+                   f"For each of the following materials, how well do you think they would perform in this application? Answer on a scale of 1-10, " \
+                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n" \
+                   f"Materials:\n{material}\nAnswers:\n"
     else:
         raise ValueError("Invalid question type")
     return question
 
 
-def append_results(results, design, criterion, material, response):
-    # validate response is only a single integer
-    try:
-        response = int(response)
-    except ValueError:
+def append_results(results, design, criterion, material, response, question_type):
+    if question_type == 'parallel':
+        response = response.replace(" ", "")
+        responses = {x.split(":")[0]: x.split(":")[1] for x in response.split("\n")}
+        for i, mat in enumerate(material.split(", ")):
+            try:
+                results = results._append({
+                    'design': design,
+                    'criteria': criterion,
+                    'material': mat,
+                    'response': responses[mat]
+                }, ignore_index=True)
+            except ValueError:
+                raise ValueError(f"Response is not a single integer: {response}")
+
+    else:
+        # validate response is only a single integer
         try:
-            response = int(response.split()[0])
             response = int(response)
         except ValueError:
-            raise ValueError(f"Response is not a single integer: {response}")
+            try:
+                response = int(response.split()[0])
+                response = int(response)
+            except ValueError:
+                raise ValueError(f"Response is not a single integer: {response}")
+        results = results._append({
+            'design': design,
+            'criteria': criterion,
+            'material': material,
+            'response': response
+        }, ignore_index=True)
 
-    return results._append({
-        'design': design,
-        'criteria': criterion,
-        'material': material,
-        'response': response
-    }, ignore_index=True)
+    return results
 
 
 if __name__ == '__main__':
@@ -85,8 +107,8 @@ if __name__ == '__main__':
         # "High strength"
     ]
 
-    for question_type in ['zero_shot', 'few-shot']:  # , 'parallel', 'chain-of-thought', 'temperature']:
-        for model in ['gpt-4-0125-preview']:  # , 'mixtral', 'melm']:
+    for question_type in ['zero_shot', 'few-shot', 'parallel']:  # , 'chain-of-thought', 'temperature']:
+        for model in ['gpt-4-0125-preview', 'mixtral']:  # , 'melm']:
             # if results exist and we don't want to overwrite, skip
             if os.path.exists(f"answers/{question_type}_{model}.csv") and not overwrite_results:
                 continue
@@ -106,7 +128,7 @@ if __name__ == '__main__':
                         else:
                             raise ValueError("Invalid question type")
 
-                        results = append_results(results, design, criterion, material, response)
+                        results = append_results(results, design, criterion, material, response, question_type)
 
             if not os.path.exists("answers"):
                 os.makedirs("answers")
