@@ -6,14 +6,20 @@ from tqdm import tqdm
 from prompt_templates import few_shot
 
 
-def run_thread(model, question, max_new_tokens=2):
+def run_thread(model, question, max_new_tokens=2, temperature=None):
     if model == 'mixtral':
+        if temperature is None:
+            temperature = 0.75  # default temperature
         # API token of the model/pipeline that we will be using
         os.environ["REPLICATE_API_TOKEN"] = ""
-        llm = Replicate(model="mistralai/mixtral-8x7b-instruct-v0.1", max_new_tokens=2)
+        llm = Replicate(model="mistralai/mixtral-8x7b-instruct-v0.1", max_new_tokens=max_new_tokens, temperature=temperature)
+
     elif model == 'gpt-4-0125-preview':
+        if temperature is None:
+            temperature = 0.1   # default temperature
         # OpenAI model
-        llm = OpenAI(model="gpt-4-0125-preview", max_new_tokens=max_new_tokens)
+        llm = OpenAI(model="gpt-4-0125-preview", max_new_tokens=max_new_tokens, temperature=temperature)
+
     else:
         raise ValueError("Invalid model")
 
@@ -22,11 +28,12 @@ def run_thread(model, question, max_new_tokens=2):
 
 
 def compile_question(design, criterion, material, question_type, reasoning=None):
-    if question_type == 'zero_shot':
+    if question_type == 'zero_shot' or 'temperature' in question_type:
         question = f"You are a material science and design engineer expert.\n" \
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
                    f"How well do you think {material} would perform in this application? Answer on a scale of 1-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words."
+
     elif question_type == 'few-shot':
         question = f"You are a material science and design engineer expert.\n" \
                    f"Below are two examples of how materials would perform from 1-10 given a design and a criterion:\n" \
@@ -34,12 +41,14 @@ def compile_question(design, criterion, material, question_type, reasoning=None)
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
                    f"How well do you think {material} would perform in this application? Answer on a scale of 1-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
+
     elif question_type == 'parallel':
         question = f"You are a material science and design engineer expert.\n" \
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
                    f"For each of the following materials, how well do you think they would perform in this application? Answer on a scale of 1-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n" \
                    f"Materials:\n{material}\nAnswers:\n"
+
     elif question_type == 'chain-of-thought':
         if count == 0:
             question = f"You are a material science and design engineer expert.\n" \
@@ -52,6 +61,7 @@ def compile_question(design, criterion, material, question_type, reasoning=None)
                        f"{reasoning}\n\n" \
                        f"Answer on a scale of 1-10, " \
                        f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
+
     else:
         raise ValueError("Invalid question type")
     return question
@@ -119,7 +129,8 @@ if __name__ == '__main__':
         # "high strength"
     ]
 
-    for question_type in ['zero_shot', 'few-shot', 'parallel', 'chain-of-thought']:  # , 'temperature']:
+    for question_type in ['zero_shot', 'few-shot', 'parallel', 'chain-of-thought',
+                          'temperature-0', 'temperature-0.2', 'temperature-0.4', 'temperature-0.6', 'temperature-0.8', 'temperature-1']:
         for model in ['gpt-4-0125-preview', 'mixtral']:  # , 'melm']:
             # if results exist and we don't want to overwrite, skip
             if os.path.exists(f"answers/{question_type}_{model}.csv") and not overwrite_results:
@@ -135,9 +146,10 @@ if __name__ == '__main__':
             for design in tqdm(designs, desc=f"Running {question_type} questions for {model}"):
                 for criterion in criteria:
                     for material in materials:
-                        if question_type != 'chain-of-thought':
+                        if question_type in ['zero_shot', 'few-shot', 'parallel']:
                             question = compile_question(design, criterion, material, question_type)
                             response = run_thread(model, question)
+
                         elif question_type == 'chain-of-thought':
                             count = 0
                             question = compile_question(design, criterion, material, question_type)
@@ -146,6 +158,11 @@ if __name__ == '__main__':
                             count = 1
                             question = compile_question(design, criterion, material, question_type, reasoning=reasoning)
                             response = run_thread(model, question)
+
+                        elif 'temperature' in question_type:
+                            temp = float(question_type.split("-")[-1])
+                            question = compile_question(design, criterion, material, question_type)
+                            response = run_thread(model, question, temperature=temp)
                         else:
                             raise ValueError("Invalid question type")
 
