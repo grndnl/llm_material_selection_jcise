@@ -15,5 +15,9 @@ JCISE publication
 
 ## Installation
 `
-pip install tqdm pandas replicate llama-index llama-index-llms-replicate
+pip install tqdm pandas replicate llama-index llama-index-llms-replicate notebook seaborn matplotlib
 `
+
+The code currently requires OpenAI and Replicate API keys, but can be modified to work with any model.
+
+For MeLM installation, please refer to the original repository [here](https://github.com/lamm-mit/MeLM).
