@@ -6,14 +6,14 @@ from tqdm import tqdm
 from prompt_templates import few_shot
 
 
-def run_thread(model, question):
+def run_thread(model, question, max_new_tokens=2):
     if model == 'mixtral':
         # API token of the model/pipeline that we will be using
         os.environ["REPLICATE_API_TOKEN"] = ""
         llm = Replicate(model="mistralai/mixtral-8x7b-instruct-v0.1", max_new_tokens=2)
     elif model == 'gpt-4-0125-preview':
         # OpenAI model
-        llm = OpenAI(model="gpt-4-0125-preview", max_new_tokens=1)
+        llm = OpenAI(model="gpt-4-0125-preview", max_new_tokens=max_new_tokens)
     else:
         raise ValueError("Invalid model")
 
@@ -21,7 +21,7 @@ def run_thread(model, question):
     return response.text
 
 
-def compile_question(design, criterion, material, question_type):
+def compile_question(design, criterion, material, question_type, reasoning=None):
     if question_type == 'zero_shot':
         question = f"You are a material science and design engineer expert.\n" \
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
@@ -40,6 +40,18 @@ def compile_question(design, criterion, material, question_type):
                    f"For each of the following materials, how well do you think they would perform in this application? Answer on a scale of 1-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n" \
                    f"Materials:\n{material}\nAnswers:\n"
+    elif question_type == 'chain-of-thought':
+        if count == 0:
+            question = f"You are a material science and design engineer expert.\n" \
+                       f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
+                       f"How well do you think {material} would perform in this application?"
+        else:
+            question = f"You are a material science and design engineer expert.\n" \
+                       f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
+                       f"How well do you think {material} would perform in this application? Below is some reasoning that you can follow:\n\n" \
+                       f"{reasoning}\n\n" \
+                       f"Answer on a scale of 1-10, " \
+                       f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
     else:
         raise ValueError("Invalid question type")
     return question
@@ -84,33 +96,34 @@ if __name__ == '__main__':
     overwrite_results = False
 
     materials = [
-        "Steel",
-        "Aluminium",
-        # "Titanium",
-        # "Glass",
-        # "Wood",
-        # "Thermoplastic",
-        # "Elastomer",
-        # "Thermoset",
-        # "Composite"
+        "steel",
+        "aluminium",
+        # "titanium",
+        # "glass",
+        # "wood",
+        # "thermoplastic",
+        # "elastomer",
+        # "thermoset",
+        # "composite"
     ]
     designs = [
-        "Kitchen Utensil Grip",
-        # "Spacecraft Component",
-        # "Underwater Component",
-        # "Safety Helmet"
+        "kitchen utensil grip",
+        # "spacecraft component",
+        # "underwater component",
+        # "safety helmet"
     ]
     criteria = [
-        "Lightweight",
-        # "Heat resistant",
-        # "Corrosion resistant",
-        # "High strength"
+        "lightweight",
+        # "heat resistant",
+        # "corrosion resistant",
+        # "high strength"
     ]
 
-    for question_type in ['zero_shot', 'few-shot', 'parallel']:  # , 'chain-of-thought', 'temperature']:
+    for question_type in ['zero_shot', 'few-shot', 'parallel', 'chain-of-thought']:  # , 'temperature']:
         for model in ['gpt-4-0125-preview', 'mixtral']:  # , 'melm']:
             # if results exist and we don't want to overwrite, skip
             if os.path.exists(f"answers/{question_type}_{model}.csv") and not overwrite_results:
+                print(f"Skipping {question_type} questions for {model}")
                 continue
 
             # initialize results dataframe
@@ -124,6 +137,14 @@ if __name__ == '__main__':
                     for material in materials:
                         if question_type != 'chain-of-thought':
                             question = compile_question(design, criterion, material, question_type)
+                            response = run_thread(model, question)
+                        elif question_type == 'chain-of-thought':
+                            count = 0
+                            question = compile_question(design, criterion, material, question_type)
+                            reasoning = run_thread(model, question, max_new_tokens=300)
+
+                            count = 1
+                            question = compile_question(design, criterion, material, question_type, reasoning=reasoning)
                             response = run_thread(model, question)
                         else:
                             raise ValueError("Invalid question type")
