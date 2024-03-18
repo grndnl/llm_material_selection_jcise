@@ -66,7 +66,7 @@ def compile_question(design, criterion, material, question_type, reasoning=None)
         question = f"You are a material science and design engineer expert.\n" \
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
                    f"For each of the following materials, how well do you think they would perform in this application? Answer on a scale of 1-10, " \
-                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n" \
+                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', just with the integers separated by commas, and no other words or explanation. Be concise.\n" \
                    f"Materials:\n{material}\nAnswers:\n"
 
     elif question_type == 'chain-of-thought':
@@ -90,7 +90,27 @@ def compile_question(design, criterion, material, question_type, reasoning=None)
 def append_results(results, design, criterion, material, response, question_type):
     if question_type == 'parallel':
         response = response.replace(" ", "")
-        responses = {x.split(":")[0]: x.split(":")[1] for x in response.split("\n")}
+        try:
+            responses = {x.split(":")[0].lower(): x.split(":")[1] for x in response.split("\n")}
+        except IndexError:
+            try:
+                responses = response.replace(".", "").split(",")
+                responses = {materials[i].lower(): responses[i] for i in range(len(materials))}
+                responses = {re.sub("[^a-zA-Z]", "", k): v for k, v in responses.items()}
+            except Exception as e:
+                try:
+                    responses = response.split("\n")
+                    # drop empty strings
+                    responses = [x for x in responses if x]
+                    responses = {x.split(":")[0].lower(): x.split(":")[1] for x in responses}
+                    # responses = {materials[i].lower(): responses[i] for i in range(len(materials))}
+                    responses = {re.sub("[^a-zA-Z]", "", k): v for k, v in responses.items()}
+                except Exception as e:
+                    print("Unknown error: ", e)
+
+        responses = {re.sub("[^a-zA-Z]", "", k): v for k, v in responses.items()}
+
+
         for i, mat in enumerate(material.split(", ")):
             try:
                 results = results._append({
@@ -103,7 +123,15 @@ def append_results(results, design, criterion, material, response, question_type
                 raise ValueError(f"Response is not a single integer: {response}")
             except KeyError as e:
                 print(e)
-                raise ValueError(f"Response does not contain all materials: {response}")
+                print(responses)
+                # raise ValueError(f"Response does not contain all materials: {response}")
+                # add null results
+                results = results._append({
+                    'design': design,
+                    'criteria': criterion,
+                    'material': mat,
+                    'response': None
+                }, ignore_index=True)
 
     else:
         # validate response is only a single integer
