@@ -29,6 +29,9 @@ if __name__ == '__main__':
             except:
                 pass
 
+            # floor all values above 10 to 10, and all values below 0 to 0
+            model_data_df['response'] = model_data_df['response'].apply(lambda x: min(10, max(0, x)))
+
             # Merge the experimen_model results with the grouped survey stats to match each generated response with its group stats
             merged_df = pd.merge(model_data_df, grouped_survey_stats, on=['design', 'criteria', 'material'], how='left')
 

@@ -12,7 +12,7 @@ gpt-4-0125-preview,temperature-1,0.49186780414508235
 mixtral,zero-shot,0.7343923464255031
 mixtral,few-shot,0.7060229865623521
 mixtral,parallel,0.23642789402496664
-mixtral,chain-of-thought,0.831421431457315
+mixtral,chain-of-thought,0.7867743880857295
 mixtral,temperature-0,0.7301236854675476
 mixtral,temperature-0.2,0.7274567866633914
 mixtral,temperature-0.4,0.7330427388441395
