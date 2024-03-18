@@ -6,14 +6,14 @@ df = pd.read_csv(file_path)
 
 # Mapping questions to 'design' and 'criteria'
 design_map = {
-    range(1, 5): "kitchen",
-    range(5, 9): "spacecraft",
-    range(9, 13): "underwater",
-    range(13, 17): "helmet",
+    range(1, 5): "kitchen utensil grip",
+    range(5, 9): "spacecraft component",
+    range(9, 13): "underwater component",
+    range(13, 17): "safety helmet",
 }
 criteria_map = {
     1: "lightweight",
-    2: "resistant to heat",
+    2: "heat resistant",
     3: "corrosion resistant",
     4: "high strength",
 }
