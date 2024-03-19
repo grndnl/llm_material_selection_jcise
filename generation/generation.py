@@ -5,9 +5,13 @@ import pandas as pd
 from tqdm import tqdm
 from prompt_templates import few_shot
 import re
+from peft import PeftModel
+from transformers import BitsAndBytesConfig
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
-def run_thread(model, question, max_new_tokens=2, temperature=None):
+def run_thread(model, question, llm=None, max_new_tokens=2, temperature=None):
     if model == 'mixtral':
         if temperature is None:
             temperature = 0.75  # default temperature
@@ -24,22 +28,22 @@ def run_thread(model, question, max_new_tokens=2, temperature=None):
         llm = OpenAI(model="gpt-4-0125-preview", max_new_tokens=max_new_tokens, temperature=temperature)
         response = llm.complete(question).text
 
-    # elif model == 'melm':
-    #     if temperature is None:
-    #         temperature = 0.4  # default temperature
-    #
-    #     response = llm.generate(input_ids=inputs.to(device),
-    #                               max_new_tokens=max_new_tokens,
-    #                               temperature=0.4,
-    #                               num_beams=1,
-    #                               top_k=50,
-    #                               top_p=0.9,
-    #                               num_return_sequences=1, eos_token_id=[2, 32000],
-    #                               do_sample=True,
-    #                               repetition_penalty=repetition_penalty,
-    #                               )
-    #     tokenizer.batch_decode(outputs[:, inputs.shape[1]:].detach().cpu().numpy(), skip_special_tokens=True)
+    elif model == 'melm':
+        if temperature is None:
+            temperature = 0.4  # default temperature
 
+        inputs = tokenizer.encode(question, add_special_tokens=False, return_tensors='pt')
+        response = llm.generate(input_ids=inputs.to(device),
+                                  max_new_tokens=max_new_tokens,
+                                  temperature=temperature,
+                                  num_beams=1,
+                                  top_k=50,
+                                  top_p=0.9,
+                                  num_return_sequences=1, eos_token_id=[2, 32000],
+                                  do_sample=True,
+                                  repetition_penalty=1,
+                                  )
+        response = tokenizer.batch_decode(response[:, inputs.shape[1]:].detach().cpu().numpy(), skip_special_tokens=True)[0]
 
     else:
         raise ValueError("Invalid model")
@@ -142,7 +146,8 @@ def append_results(results, design, criterion, material, response, question_type
                 response = response.split()[0]
                 response = int(re.sub("[^0-9]", "", response))
             except ValueError:
-                raise ValueError(f"Response is not a single integer: {response}")
+                # raise ValueError(f"Response is not a single integer: {response}")
+                response = None
         results = results._append({
             'design': design,
             'criteria': criterion,
@@ -153,30 +158,36 @@ def append_results(results, design, criterion, material, response, question_type
     return results
 
 
-# def load_melm():
-#     bnb_config4bit = BitsAndBytesConfig(
-#         load_in_4bit=True,
-#         bnb_4bit_quant_type="nf4",
-#         bnb_4bit_compute_dtype=torch.bfloat16,
-#     )
-#
-#     # tokenizer = AutoTokenizer.from_pretrained(model_name)
-#
-#     model_base = AutoModelForCausalLM.from_pretrained(
-#         model_name,
-#         device_map="auto",
-#         quantization_config=bnb_config4bit,
-#         torch_dtype=torch.bfloat16,
-#         trust_remote_code=True,
-#     )
-#
-#     llm = PeftModel.from_pretrained(model_base, peft_model_id)
-#     tokenizer = AutoTokenizer.from_pretrained(model_name)
-#
-#     tokenizer.pad_token = tokenizer.eos_token
-#     tokenizer.padding_side = "right"
-#
-#     return llm, tokenizer
+def load_melm():
+    print("Loading MeLM model")
+    model_name = 'Open-Orca/OpenOrca-Platypus2-13B'
+    FT_model_name = 'MechGPT-13b_v106C'
+    peft_model_id = f'{FT_model_name}'
+    # subfolder = "../models/melm/mechGPT-13b_v106C"
+    # local_dir = "../models/melm/mechGPT-13b_v106C"
+
+    bnb_config4bit = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16,
+    )
+
+    model_base = AutoModelForCausalLM.from_pretrained(
+        model_name,
+        device_map="auto",
+        quantization_config=bnb_config4bit,
+        torch_dtype=torch.bfloat16,
+        trust_remote_code=True,
+    )
+
+    llm = PeftModel.from_pretrained(model_base, peft_model_id) #, subfolder=subfolder, local_dir=local_dir)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+    tokenizer.pad_token = tokenizer.eos_token
+    tokenizer.padding_side = "right"
+
+    print("MeLM model loaded")
+    return llm, tokenizer
 
 
 if __name__ == '__main__':
@@ -206,45 +217,49 @@ if __name__ == '__main__':
         "high strength"
     ]
 
-    for model in ['gpt-4-0125-preview', 'mixtral']:  # , 'melm']:
-        # if model == 'melm':
-        #     llm, tokenizer = load_melm()
+    # for model in ['gpt-4-0125-preview', 'mixtral', 'melm']:
+    for model_name in ['melm']:
+        if model_name == 'melm':
+            llm, tokenizer = load_melm()
+            device = 'cuda'
+        else:
+            llm = None
 
         for question_type in ['zero-shot', 'few-shot', 'parallel', 'chain-of-thought',
                               'temperature-0', 'temperature-0.2', 'temperature-0.4', 'temperature-0.6',
                               'temperature-0.8', 'temperature-1']:
             # if results exist and we don't want to overwrite, skip
-            if os.path.exists(f"answers/{question_type}_{model}.csv") and not overwrite_results:
-                print(f"Skipping {question_type} questions for {model}")
+            if os.path.exists(f"answers/{question_type}_{model_name}.csv") and not overwrite_results:
+                print(f"Skipping {question_type} questions for {model_name}")
                 continue
 
             # initialize results dataframe
             results = pd.DataFrame(columns=['design', 'criteria', 'material', 'response'])
 
-            for design in tqdm(designs, desc=f"Running {question_type} questions for {model}"):
+            for design in tqdm(designs, desc=f"Running {question_type} questions for {model_name}"):
                 for criterion in criteria:
                     for material in materials:
                         if question_type in ['zero-shot', 'few-shot']:
                             question = compile_question(design, criterion, material, question_type)
-                            response = run_thread(model, question)
+                            response = run_thread(model_name, question, llm=llm)
 
                         elif question_type == 'parallel':
                             question = compile_question(design, criterion, [", ".join(materials)], question_type)
-                            response = run_thread(model, question)
+                            response = run_thread(model_name, question, llm=llm)
 
                         elif question_type == 'chain-of-thought':
                             count = 0
                             question = compile_question(design, criterion, material, question_type)
-                            reasoning = run_thread(model, question, max_new_tokens=300)
+                            reasoning = run_thread(model_name, question, llm=llm, max_new_tokens=300)
 
                             count = 1
                             question = compile_question(design, criterion, material, question_type, reasoning=reasoning)
-                            response = run_thread(model, question)
+                            response = run_thread(model_name, question, llm=llm)
 
                         elif 'temperature' in question_type:
                             temp = float(question_type.split("-")[-1])
                             question = compile_question(design, criterion, material, question_type)
-                            response = run_thread(model, question, temperature=temp)
+                            response = run_thread(model_name, question, llm=llm, temperature=temp)
                         else:
                             raise ValueError(f"Invalid question type: {question_type}")
 
@@ -252,4 +267,4 @@ if __name__ == '__main__':
 
             if not os.path.exists("answers"):
                 os.makedirs("answers")
-            results.to_csv(f"answers/{question_type}_{model}.csv", index=False)
+            results.to_csv(f"answers/{question_type}_{model_name}.csv", index=False)
