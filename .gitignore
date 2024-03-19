@@ -1,3 +1,10 @@
 /.idea/
 .DS_Store
 **/.DS_Store
+/generation/MechGPT-13b_v106C/adapter_model.bin
+/generation/MechGPT-13b_v106C/tokenizer_config.json
+/generation/MechGPT-13b_v106C/adapter_config.json
+/generation/MechGPT-13b_v106C/tokenizer.json
+/generation/MechGPT-13b_v106C/tokenizer.model
+/generation/MechGPT-13b_v106C/added_tokens.json
+/generation/MechGPT-13b_v106C/special_tokens_map.json
