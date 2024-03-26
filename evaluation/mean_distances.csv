@@ -19,3 +19,13 @@ mixtral,temperature-0.4,3.259772939709359
 mixtral,temperature-0.6,3.2693978184104378
 mixtral,temperature-0.8,3.24537203483927
 mixtral,temperature-1,3.270580707890545
+melm,zero-shot,3.218689941884312
+melm,few-shot,3.2754150054923823
+melm,parallel,3.66371174934852
+melm,chain-of-thought,3.3813017863375805
+melm,temperature-0.1,3.227572113717915
+melm,temperature-0.2,3.2845511319706677
+melm,temperature-0.4,3.342118976550803
+melm,temperature-0.6,3.336693301525715
+melm,temperature-0.8,3.3395454797697965
+melm,temperature-1,3.241490939325147

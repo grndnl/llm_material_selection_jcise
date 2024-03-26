@@ -15,10 +15,13 @@ if __name__ == '__main__':
     grouped_survey_stats = survey_responses_df.groupby(['design', 'criteria', 'material'])['response'].agg(
         ['mean', 'std']).reset_index()
 
-    for model in ['gpt-4-0125-preview', 'mixtral']:    # , 'melm']:
+    for model in ['gpt-4-0125-preview', 'mixtral', 'melm']:
         for experiment in ['zero-shot', 'few-shot', 'parallel', 'chain-of-thought',
                               'temperature-0', 'temperature-0.2', 'temperature-0.4', 'temperature-0.6',
                               'temperature-0.8', 'temperature-1']:
+            if model == 'melm' and experiment == 'temperature-0':
+                experiment = 'temperature-0.1'
+
             # load model data
             model_data_path = f'../generation/answers/{experiment}_{model}.csv'
             model_data_df = pd.read_csv(model_data_path)
