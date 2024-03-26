@@ -3,7 +3,7 @@ from llama_index.llms.openai import OpenAI
 import os
 import pandas as pd
 from tqdm import tqdm
-from prompt_templates import few_shot
+from generation.prompt_templates_previous import few_shot
 import re
 from peft import PeftModel
 from transformers import BitsAndBytesConfig
@@ -57,21 +57,21 @@ def compile_question(design, criterion, material, question_type, reasoning=None)
     if question_type == 'zero-shot' or 'temperature' in question_type:
         question = f"You are a material science and design engineer expert.\n" \
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
-                   f"How well do you think {material} would perform in this application? Answer on a scale of 1-10, " \
+                   f"How well do you think {material} would perform in this application? Answer on a scale of 0-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words."
 
     elif question_type == 'few-shot':
         question = f"You are a material science and design engineer expert.\n" \
-                   f"Below are two examples of how materials would perform from 1-10 given a design and a criterion:\n" \
+                   f"Below are two examples of how materials would perform from 0-10 given a design and a criterion:\n" \
                    f"{few_shot}\n" \
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
-                   f"How well do you think {material} would perform in this application? Answer on a scale of 1-10, " \
+                   f"How well do you think {material} would perform in this application? Answer on a scale of 0-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
 
     elif question_type == 'parallel':
         question = f"You are a material science and design engineer expert.\n" \
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
-                   f"For each of the following materials, how well do you think they would perform in this application? Answer on a scale of 1-10, " \
+                   f"For each of the following materials, how well do you think they would perform in this application? Answer on a scale of 0-10, " \
                    f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', just with the integers separated by commas, and no other words or explanation. Be concise and answer for all 9 materials.\n" \
                    f"Materials:\n{material}\nAnswers:\n"
 
@@ -85,7 +85,7 @@ def compile_question(design, criterion, material, question_type, reasoning=None)
                        f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
                        f"How well do you think {material} would perform in this application? Below is some reasoning that you can follow:\n\n" \
                        f"{reasoning}\n\n" \
-                       f"Answer on a scale of 1-10, " \
+                       f"Answer on a scale of 0-10, " \
                        f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
 
     else:
