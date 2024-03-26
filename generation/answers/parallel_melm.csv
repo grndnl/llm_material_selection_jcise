@@ -1,0 +1,145 @@
+design,criteria,material,response
+kitchen utensil grip,lightweight,steel,6
+kitchen utensil grip,lightweight,aluminium,4
+kitchen utensil grip,lightweight,titanium,10
+kitchen utensil grip,lightweight,glass,1
+kitchen utensil grip,lightweight,wood,3
+kitchen utensil grip,lightweight,thermoplastic,7
+kitchen utensil grip,lightweight,elastomer,9
+kitchen utensil grip,lightweight,thermoset,8
+kitchen utensil grip,lightweight,composite,5
+kitchen utensil grip,heat resistant,steel,
+kitchen utensil grip,heat resistant,aluminium,
+kitchen utensil grip,heat resistant,titanium,
+kitchen utensil grip,heat resistant,glass,
+kitchen utensil grip,heat resistant,wood,
+kitchen utensil grip,heat resistant,thermoplastic,
+kitchen utensil grip,heat resistant,elastomer,
+kitchen utensil grip,heat resistant,thermoset,
+kitchen utensil grip,heat resistant,composite,
+kitchen utensil grip,corrosion resistant,steel,1
+kitchen utensil grip,corrosion resistant,aluminium,6
+kitchen utensil grip,corrosion resistant,titanium,7
+kitchen utensil grip,corrosion resistant,glass,4
+kitchen utensil grip,corrosion resistant,wood,3
+kitchen utensil grip,corrosion resistant,thermoplastic,1
+kitchen utensil grip,corrosion resistant,elastomer,1
+kitchen utensil grip,corrosion resistant,thermoset,1
+kitchen utensil grip,corrosion resistant,composite,2
+kitchen utensil grip,high strength,steel,
+kitchen utensil grip,high strength,aluminium,
+kitchen utensil grip,high strength,titanium,
+kitchen utensil grip,high strength,glass,
+kitchen utensil grip,high strength,wood,
+kitchen utensil grip,high strength,thermoplastic,
+kitchen utensil grip,high strength,elastomer,
+kitchen utensil grip,high strength,thermoset,
+kitchen utensil grip,high strength,composite,
+spacecraft component,lightweight,steel,1
+spacecraft component,lightweight,aluminium,6
+spacecraft component,lightweight,titanium,7
+spacecraft component,lightweight,glass,8
+spacecraft component,lightweight,wood,2
+spacecraft component,lightweight,thermoplastic,3
+spacecraft component,lightweight,elastomer,4
+spacecraft component,lightweight,thermoset,5
+spacecraft component,lightweight,composite,9
+spacecraft component,heat resistant,steel,3
+spacecraft component,heat resistant,aluminium,2
+spacecraft component,heat resistant,titanium,5
+spacecraft component,heat resistant,glass,0
+spacecraft component,heat resistant,wood,0
+spacecraft component,heat resistant,thermoplastic,7
+spacecraft component,heat resistant,elastomer,9
+spacecraft component,heat resistant,thermoset,7
+spacecraft component,heat resistant,composite,8
+spacecraft component,corrosion resistant,steel,5
+spacecraft component,corrosion resistant,aluminium,5
+spacecraft component,corrosion resistant,titanium,5
+spacecraft component,corrosion resistant,glass,2
+spacecraft component,corrosion resistant,wood,1
+spacecraft component,corrosion resistant,thermoplastic,3
+spacecraft component,corrosion resistant,elastomer,7
+spacecraft component,corrosion resistant,thermoset,6
+spacecraft component,corrosion resistant,composite,8
+spacecraft component,high strength,steel,1
+spacecraft component,high strength,aluminium,6
+spacecraft component,high strength,titanium,7
+spacecraft component,high strength,glass,8
+spacecraft component,high strength,wood,5
+spacecraft component,high strength,thermoplastic,3
+spacecraft component,high strength,elastomer,1
+spacecraft component,high strength,thermoset,7
+spacecraft component,high strength,composite,3
+underwater component,lightweight,steel,1
+underwater component,lightweight,aluminium,6
+underwater component,lightweight,titanium,4
+underwater component,lightweight,glass,3
+underwater component,lightweight,wood,2
+underwater component,lightweight,thermoplastic,7
+underwater component,lightweight,elastomer,8
+underwater component,lightweight,thermoset,5
+underwater component,lightweight,composite,9
+underwater component,heat resistant,steel,1
+underwater component,heat resistant,aluminium,6
+underwater component,heat resistant,titanium,7
+underwater component,heat resistant,glass,4
+underwater component,heat resistant,wood,3
+underwater component,heat resistant,thermoplastic,5
+underwater component,heat resistant,elastomer,8
+underwater component,heat resistant,thermoset,7
+underwater component,heat resistant,composite,9
+underwater component,corrosion resistant,steel,1
+underwater component,corrosion resistant,aluminium,4
+underwater component,corrosion resistant,titanium,7
+underwater component,corrosion resistant,glass,3
+underwater component,corrosion resistant,wood,2
+underwater component,corrosion resistant,thermoplastic,5
+underwater component,corrosion resistant,elastomer,8
+underwater component,corrosion resistant,thermoset,6
+underwater component,corrosion resistant,composite,9
+underwater component,high strength,steel,1
+underwater component,high strength,aluminium,6
+underwater component,high strength,titanium,7
+underwater component,high strength,glass,8
+underwater component,high strength,wood,5
+underwater component,high strength,thermoplastic,3
+underwater component,high strength,elastomer,2
+underwater component,high strength,thermoset,4
+underwater component,high strength,composite,9
+safety helmet,lightweight,steel,1
+safety helmet,lightweight,aluminium,6
+safety helmet,lightweight,titanium,10
+safety helmet,lightweight,glass,1
+safety helmet,lightweight,wood,2
+safety helmet,lightweight,thermoplastic,3
+safety helmet,lightweight,elastomer,4
+safety helmet,lightweight,thermoset,5
+safety helmet,lightweight,composite,8
+safety helmet,heat resistant,steel,
+safety helmet,heat resistant,aluminium,
+safety helmet,heat resistant,titanium,
+safety helmet,heat resistant,glass,
+safety helmet,heat resistant,wood,
+safety helmet,heat resistant,thermoplastic,
+safety helmet,heat resistant,elastomer,
+safety helmet,heat resistant,thermoset,
+safety helmet,heat resistant,composite,
+safety helmet,corrosion resistant,steel,1
+safety helmet,corrosion resistant,aluminium,3
+safety helmet,corrosion resistant,titanium,5
+safety helmet,corrosion resistant,glass,2
+safety helmet,corrosion resistant,wood,1
+safety helmet,corrosion resistant,thermoplastic,7
+safety helmet,corrosion resistant,elastomer,9
+safety helmet,corrosion resistant,thermoset,4
+safety helmet,corrosion resistant,composite,8
+safety helmet,high strength,steel,
+safety helmet,high strength,aluminium,
+safety helmet,high strength,titanium,
+safety helmet,high strength,glass,
+safety helmet,high strength,wood,
+safety helmet,high strength,thermoplastic,
+safety helmet,high strength,elastomer,
+safety helmet,high strength,thermoset,
+safety helmet,high strength,composite,

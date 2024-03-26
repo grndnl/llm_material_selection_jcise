@@ -32,18 +32,20 @@ def run_thread(model, question, llm=None, max_new_tokens=2, temperature=None):
         if temperature is None:
             temperature = 0.4  # default temperature
 
+        question += 'answer: '
         inputs = tokenizer.encode(question, add_special_tokens=False, return_tensors='pt')
         response = llm.generate(input_ids=inputs.to(device),
-                                  max_new_tokens=max_new_tokens,
-                                  temperature=temperature,
-                                  num_beams=1,
-                                  top_k=50,
-                                  top_p=0.9,
-                                  num_return_sequences=1, eos_token_id=[2, 32000],
-                                  do_sample=True,
-                                  repetition_penalty=1,
-                                  )
-        response = tokenizer.batch_decode(response[:, inputs.shape[1]:].detach().cpu().numpy(), skip_special_tokens=True)[0]
+                                max_new_tokens=max_new_tokens,
+                                temperature=temperature,
+                                num_beams=1,
+                                # top_k=50,
+                                top_p=0.9,
+                                num_return_sequences=1, eos_token_id=[2, 32000],
+                                do_sample=True,
+                                repetition_penalty=1,
+                                )
+        response = tokenizer.batch_decode(response[:, inputs.shape[1]:].detach().cpu().numpy(),
+                                          skip_special_tokens=True)[0]
 
     else:
         raise ValueError("Invalid model")
@@ -70,7 +72,7 @@ def compile_question(design, criterion, material, question_type, reasoning=None)
         question = f"You are a material science and design engineer expert.\n" \
                    f"You are tasked with designing a {design}. The design should be {criterion}.\n" \
                    f"For each of the following materials, how well do you think they would perform in this application? Answer on a scale of 1-10, " \
-                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', just with the integers separated by commas, and no other words or explanation. Be concise.\n" \
+                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', just with the integers separated by commas, and no other words or explanation. Be concise and answer for all 9 materials.\n" \
                    f"Materials:\n{material}\nAnswers:\n"
 
     elif question_type == 'chain-of-thought':
@@ -93,12 +95,14 @@ def compile_question(design, criterion, material, question_type, reasoning=None)
 
 def append_results(results, design, criterion, material, response, question_type):
     if question_type == 'parallel':
+        materials = material.split(", ")
         response = response.replace(" ", "")
         try:
             responses = {x.split(":")[0].lower(): x.split(":")[1] for x in response.split("\n")}
         except IndexError:
             try:
-                responses = response.replace(".", "").split(",")
+                responses = response.split("\n")[0]
+                responses = responses.replace(".", "").split(",")
                 responses = {materials[i].lower(): responses[i] for i in range(len(materials))}
                 responses = {re.sub("[^a-zA-Z]", "", k): v for k, v in responses.items()}
             except Exception as e:
@@ -109,10 +113,20 @@ def append_results(results, design, criterion, material, response, question_type
                     responses = {x.split(":")[0].lower(): x.split(":")[1] for x in responses}
                     # responses = {materials[i].lower(): responses[i] for i in range(len(materials))}
                     responses = {re.sub("[^a-zA-Z]", "", k): v for k, v in responses.items()}
+                # except Exception as e:
+                #     try:
+                #         responses = response.split("\n")[0]
+                #         responses = responses.split(",")
+                #         responses = {materials[i].lower(): responses[i] for i in range(len(materials.split))}
+
                 except Exception as e:
                     print("Unknown error: ", e)
+                    print(response)
 
-        responses = {re.sub("[^a-zA-Z]", "", k): v for k, v in responses.items()}
+        try:
+            responses = {re.sub("[^a-zA-Z]", "", k): v for k, v in responses.items()}
+        except Exception as e:
+            print("Unknown error: ", e)
 
 
         for i, mat in enumerate(material.split(", ")):
@@ -125,6 +139,13 @@ def append_results(results, design, criterion, material, response, question_type
                 }, ignore_index=True)
             except ValueError:
                 raise ValueError(f"Response is not a single integer: {response}")
+            except TypeError:
+                results = results._append({
+                    'design': design,
+                    'criteria': criterion,
+                    'material': mat,
+                    'response': None
+                }, ignore_index=True)
             except KeyError as e:
                 print(e)
                 print(responses)
@@ -134,7 +155,7 @@ def append_results(results, design, criterion, material, response, question_type
                     'design': design,
                     'criteria': criterion,
                     'material': mat,
-                    'response': None
+                    'response': response
                 }, ignore_index=True)
 
     else:
@@ -145,9 +166,9 @@ def append_results(results, design, criterion, material, response, question_type
             try:
                 response = response.split()[0]
                 response = int(re.sub("[^0-9]", "", response))
-            except ValueError:
+            except Exception as e:
                 # raise ValueError(f"Response is not a single integer: {response}")
-                response = None
+                response = response
         results = results._append({
             'design': design,
             'criteria': criterion,
@@ -163,15 +184,11 @@ def load_melm():
     model_name = 'Open-Orca/OpenOrca-Platypus2-13B'
     FT_model_name = 'MechGPT-13b_v106C'
     peft_model_id = f'{FT_model_name}'
-    # subfolder = "../models/melm/mechGPT-13b_v106C"
-    # local_dir = "../models/melm/mechGPT-13b_v106C"
-
     bnb_config4bit = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_quant_type="nf4",
         bnb_4bit_compute_dtype=torch.bfloat16,
     )
-
     model_base = AutoModelForCausalLM.from_pretrained(
         model_name,
         device_map="auto",
@@ -180,7 +197,7 @@ def load_melm():
         trust_remote_code=True,
     )
 
-    llm = PeftModel.from_pretrained(model_base, peft_model_id) #, subfolder=subfolder, local_dir=local_dir)
+    llm = PeftModel.from_pretrained(model_base, peft_model_id)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     tokenizer.pad_token = tokenizer.eos_token
@@ -217,8 +234,7 @@ if __name__ == '__main__':
         "high strength"
     ]
 
-    # for model in ['gpt-4-0125-preview', 'mixtral', 'melm']:
-    for model_name in ['melm']:
+    for model_name in ['gpt-4-0125-preview', 'mixtral', 'melm']:
         if model_name == 'melm':
             llm, tokenizer = load_melm()
             device = 'cuda'
@@ -238,32 +254,38 @@ if __name__ == '__main__':
 
             for design in tqdm(designs, desc=f"Running {question_type} questions for {model_name}"):
                 for criterion in criteria:
-                    for material in materials:
-                        if question_type in ['zero-shot', 'few-shot']:
-                            question = compile_question(design, criterion, material, question_type)
-                            response = run_thread(model_name, question, llm=llm)
-
-                        elif question_type == 'parallel':
-                            question = compile_question(design, criterion, [", ".join(materials)], question_type)
-                            response = run_thread(model_name, question, llm=llm)
-
-                        elif question_type == 'chain-of-thought':
-                            count = 0
-                            question = compile_question(design, criterion, material, question_type)
-                            reasoning = run_thread(model_name, question, llm=llm, max_new_tokens=300)
-
-                            count = 1
-                            question = compile_question(design, criterion, material, question_type, reasoning=reasoning)
-                            response = run_thread(model_name, question, llm=llm)
-
-                        elif 'temperature' in question_type:
-                            temp = float(question_type.split("-")[-1])
-                            question = compile_question(design, criterion, material, question_type)
-                            response = run_thread(model_name, question, llm=llm, temperature=temp)
-                        else:
-                            raise ValueError(f"Invalid question type: {question_type}")
-
+                    if question_type == 'parallel':
+                        material = ", ".join(materials)
+                        question = compile_question(design, criterion,  material, question_type)
+                        response = run_thread(model_name, question, llm=llm, max_new_tokens=30)
                         results = append_results(results, design, criterion, material, response, question_type)
+                    else:
+                        for material in materials:
+                            if question_type in ['zero-shot', 'few-shot']:
+                                question = compile_question(design, criterion, material, question_type)
+                                response = run_thread(model_name, question, llm=llm)
+
+                            elif question_type == 'parallel':
+                                question = compile_question(design, criterion, [", ".join(materials)], question_type)
+                                response = run_thread(model_name, question, llm=llm, max_new_tokens=20)
+
+                            elif question_type == 'chain-of-thought':
+                                count = 0
+                                question = compile_question(design, criterion, material, question_type)
+                                reasoning = run_thread(model_name, question, llm=llm, max_new_tokens=300)
+
+                                count = 1
+                                question = compile_question(design, criterion, material, question_type, reasoning=reasoning)
+                                response = run_thread(model_name, question, llm=llm)
+
+                            elif 'temperature' in question_type:
+                                temp = float(question_type.split("-")[-1])
+                                question = compile_question(design, criterion, material, question_type)
+                                response = run_thread(model_name, question, llm=llm, temperature=temp)
+                            else:
+                                raise ValueError(f"Invalid question type: {question_type}")
+
+                            results = append_results(results, design, criterion, material, response, question_type)
 
             if not os.path.exists("answers"):
                 os.makedirs("answers")
