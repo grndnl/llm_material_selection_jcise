@@ -3,7 +3,7 @@ from llama_index.llms.openai import OpenAI
 import os
 import pandas as pd
 from tqdm import tqdm
-from generation.prompt_templates_previous import few_shot
+from prompt_templates import few_shot
 import re
 from peft import PeftModel
 from transformers import BitsAndBytesConfig
