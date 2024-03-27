@@ -5,10 +5,6 @@ import pandas as pd
 from tqdm import tqdm
 from prompt_templates import few_shot
 import re
-from peft import PeftModel
-from transformers import BitsAndBytesConfig
-import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 def run_thread(model, question, llm=None, max_new_tokens=2, temperature=None):
@@ -181,6 +177,12 @@ def append_results(results, design, criterion, material, response, question_type
 
 def load_melm():
     print("Loading MeLM model")
+
+    from peft import PeftModel
+    from transformers import BitsAndBytesConfig
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
     model_name = 'Open-Orca/OpenOrca-Platypus2-13B'
     FT_model_name = 'MechGPT-13b_v106C'
     peft_model_id = f'{FT_model_name}'
