@@ -1,7 +1,7 @@
 model,experiment,mean_distances
 GPT-4,zero-shot,2.987224463163507
 GPT-4,few-shot,3.101066158102473
-GPT-4,parallel,2.979435102717462
+GPT-4,parallel,2.9459593192416786
 GPT-4,chain-of-thought,3.5111432205034587
 GPT-4,temperature-0,3.0362595622456885
 GPT-4,temperature-0.2,3.015169766462218

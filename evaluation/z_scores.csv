@@ -1,7 +1,7 @@
 model,experiment,mean_z_score
 GPT-4,zero-shot,0.4465186751311816
 GPT-4,few-shot,0.49702186040580265
-GPT-4,parallel,0.40158661423760983
+GPT-4,parallel,0.37812936638892913
 GPT-4,chain-of-thought,0.8105063907670087
 GPT-4,temperature-0,0.4978960674907754
 GPT-4,temperature-0.2,0.48263564909534473
