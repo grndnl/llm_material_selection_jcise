@@ -14,6 +14,15 @@ def calculate_mean_distance(row, survey_df):
     return distances.mean()
 
 
+def model_name_change(original_name):
+    if original_name == 'gpt-4-0125-preview':
+        return 'GPT-4'
+    if original_name == 'mixtral':
+        return 'Mixtral'
+    if original_name == 'melm':
+        return 'MechGPT'
+
+
 if __name__ == '__main__':
     results = []
 
@@ -54,7 +63,7 @@ if __name__ == '__main__':
 
             # Save the mean z-scored in the results array
             mean_distances = model_data_df['mean_distance'].mean()
-            results.append({'model': model, 'experiment': experiment, 'mean_distances': mean_distances})
+            results.append({'model': model_name_change(model), 'experiment': experiment, 'mean_distances': mean_distances})
 
     # Save the results to a CSV file
     results_df = pd.DataFrame(results)

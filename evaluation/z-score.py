@@ -1,6 +1,15 @@
 import pandas as pd
 
 
+def model_name_change(original_name):
+    if original_name == 'gpt-4-0125-preview':
+        return 'GPT-4'
+    if original_name == 'mixtral':
+        return 'Mixtral'
+    if original_name == 'melm':
+        return 'MechGPT'
+
+
 if __name__ == '__main__':
     results = []
 
@@ -43,7 +52,7 @@ if __name__ == '__main__':
 
             # Save the mean z-scored in the results array
             mean_z_score = merged_df['z_score'].mean()
-            results.append({'model': model, 'experiment': experiment, 'mean_z_score': mean_z_score})
+            results.append({'model': model_name_change(model), 'experiment': experiment, 'mean_z_score': mean_z_score})
 
     # Save the results to a CSV file
     results_df = pd.DataFrame(results)
