@@ -12,7 +12,7 @@ def run_thread(model, question, llm=None, max_new_tokens=2, temperature=None):
         if temperature is None:
             temperature = 0.75  # default temperature
         # API token of the model/pipeline that we will be using
-        os.environ["REPLICATE_API_TOKEN"] = ""
+        # os.environ["REPLICATE_API_TOKEN"] = ""
         llm = Replicate(model="mistralai/mixtral-8x7b-instruct-v0.1", max_new_tokens=max_new_tokens,
                         temperature=temperature)
         response = llm.complete(question).text
@@ -21,6 +21,7 @@ def run_thread(model, question, llm=None, max_new_tokens=2, temperature=None):
         if temperature is None:
             temperature = 0.1  # default temperature
         # OpenAI model
+        # os.environ["OPENAI_API_KEY"] = ""
         llm = OpenAI(model="gpt-4-0125-preview", max_new_tokens=max_new_tokens, temperature=temperature)
         response = llm.complete(question).text
 
