@@ -14,9 +14,9 @@ JCISE publication
 ```
 
 ## Installation
-`
+```bash
 pip install tqdm pandas replicate llama-index llama-index-llms-replicate notebook seaborn matplotlib
-`
+```
 
 The code currently requires OpenAI and Replicate API keys, but can be modified to work with any model.
 
