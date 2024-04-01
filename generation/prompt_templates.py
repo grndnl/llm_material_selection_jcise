@@ -1,6 +1,6 @@
 few_shot = """
         - Example 1
-        Design: Bicycle Frame
+        Design: Bicycle Frame Grip
         Criterion: Impact Resistant
         You are tasked with designing the grip of a bicycle frame which should be impact resistant.
         How well do you think each of the provided materials would perform in this application? (Use a scale of 0-10 where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent')
@@ -34,9 +34,9 @@ few_shot = """
     
     
         - Example 2
-        Design: Medical Implant
+        Design: Medical Implant Grip
         Criterion: Durable
-        You are tasked with designing a medical implant which should be durable. How well do you
+        You are tasked with designing the grip of a medical implant which should be durable. How well do you
         think each of the provided materials would perform in this application? (Use a scale of 0-10 where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent')
         
         Steel: 7 
