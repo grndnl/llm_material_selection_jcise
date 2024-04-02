@@ -1,6 +1,6 @@
 model,experiment,mean_distances
 GPT-4,zero-shot,2.987224463163507
-GPT-4,few-shot,3.101066158102473
+GPT-4,few-shot,3.1596198044461397
 GPT-4,parallel,2.9459593192416786
 GPT-4,chain-of-thought,3.5111432205034587
 GPT-4,temperature-0,3.0362595622456885
@@ -10,7 +10,7 @@ GPT-4,temperature-0.6,3.0499591402639217
 GPT-4,temperature-0.8,3.049528814414581
 GPT-4,temperature-1,3.0170123068582275
 Mixtral,zero-shot,3.2780994767169127
-Mixtral,few-shot,3.2589008843942846
+Mixtral,few-shot,3.270369447578463
 Mixtral,parallel,2.8996226226881907
 Mixtral,chain-of-thought,3.3484013833722464
 Mixtral,temperature-0,3.2715927083724825
@@ -20,8 +20,8 @@ Mixtral,temperature-0.6,3.2693978184104378
 Mixtral,temperature-0.8,3.24537203483927
 Mixtral,temperature-1,3.270580707890545
 MechGPT,zero-shot,3.0502653261452273
-MechGPT,few-shot,3.2630462416178494
-MechGPT,parallel,3.571199113272573
+MechGPT,few-shot,3.2998564910350954
+MechGPT,parallel,3.3936686896278982
 MechGPT,chain-of-thought,3.353436318900968
 MechGPT,temperature-0.1,3.227572113717915
 MechGPT,temperature-0.2,3.2845511319706677
