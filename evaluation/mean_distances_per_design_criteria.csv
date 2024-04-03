@@ -1,0 +1,193 @@
+model,experiment,design,criteria,mean_distances
+GPT-4,zero-shot,kitchen utensil grip,lightweight,3.3177264213044166
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,2.7640791476407913
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,3.354642313546423
+GPT-4,zero-shot,kitchen utensil grip,high strength,2.801801801801802
+GPT-4,zero-shot,spacecraft component,lightweight,2.757433489827856
+GPT-4,zero-shot,spacecraft component,heat resistant,2.8666666666666667
+GPT-4,zero-shot,spacecraft component,corrosion resistant,2.9210950080515294
+GPT-4,zero-shot,spacecraft component,high strength,2.646879756468797
+GPT-4,zero-shot,underwater component,lightweight,3.484984984984985
+GPT-4,zero-shot,underwater component,heat resistant,2.807017543859649
+GPT-4,zero-shot,underwater component,corrosion resistant,3.6737891737891735
+GPT-4,zero-shot,underwater component,high strength,2.6932707355242567
+GPT-4,zero-shot,safety helmet,lightweight,3.0632716049382713
+GPT-4,zero-shot,safety helmet,heat resistant,2.427230046948357
+GPT-4,zero-shot,safety helmet,corrosion resistant,2.9706790123456788
+GPT-4,zero-shot,safety helmet,high strength,2.633802816901409
+GPT-4,few-shot,kitchen utensil grip,lightweight,3.082012362585238
+GPT-4,few-shot,kitchen utensil grip,heat resistant,3.372907153729072
+GPT-4,few-shot,kitchen utensil grip,corrosion resistant,3.6666666666666665
+GPT-4,few-shot,kitchen utensil grip,high strength,2.828828828828829
+GPT-4,few-shot,spacecraft component,lightweight,2.923317683881064
+GPT-4,few-shot,spacecraft component,heat resistant,2.848888888888889
+GPT-4,few-shot,spacecraft component,corrosion resistant,3.1835748792270535
+GPT-4,few-shot,spacecraft component,high strength,2.550989345509893
+GPT-4,few-shot,underwater component,lightweight,3.5210210210210215
+GPT-4,few-shot,underwater component,heat resistant,2.89766081871345
+GPT-4,few-shot,underwater component,corrosion resistant,3.947293447293447
+GPT-4,few-shot,underwater component,high strength,2.807511737089202
+GPT-4,few-shot,safety helmet,lightweight,2.9027777777777777
+GPT-4,few-shot,safety helmet,heat resistant,3.205007824726135
+GPT-4,few-shot,safety helmet,corrosion resistant,3.6342592592592595
+GPT-4,few-shot,safety helmet,high strength,2.561815336463224
+GPT-4,parallel,kitchen utensil grip,lightweight,3.1657464410768457
+GPT-4,parallel,kitchen utensil grip,heat resistant,3.018264840182648
+GPT-4,parallel,kitchen utensil grip,corrosion resistant,3.112633181126332
+GPT-4,parallel,kitchen utensil grip,high strength,2.9759759759759756
+GPT-4,parallel,spacecraft component,lightweight,2.748043818466354
+GPT-4,parallel,spacecraft component,heat resistant,2.788148148148148
+GPT-4,parallel,spacecraft component,corrosion resistant,2.859903381642512
+GPT-4,parallel,spacecraft component,high strength,2.742770167427702
+GPT-4,parallel,underwater component,lightweight,3.3138138138138142
+GPT-4,parallel,underwater component,heat resistant,2.93859649122807
+GPT-4,parallel,underwater component,corrosion resistant,3.2635327635327633
+GPT-4,parallel,underwater component,high strength,2.7417840375586855
+GPT-4,parallel,safety helmet,lightweight,2.9151234567901234
+GPT-4,parallel,safety helmet,heat resistant,2.447574334898279
+GPT-4,parallel,safety helmet,corrosion resistant,2.95216049382716
+GPT-4,parallel,safety helmet,high strength,2.58528951486698
+GPT-4,chain-of-thought,kitchen utensil grip,lightweight,3.9713560156506134
+GPT-4,chain-of-thought,kitchen utensil grip,heat resistant,3.681887366818873
+GPT-4,chain-of-thought,kitchen utensil grip,corrosion resistant,4.04261796042618
+GPT-4,chain-of-thought,kitchen utensil grip,high strength,3.1831831831831834
+GPT-4,chain-of-thought,spacecraft component,lightweight,3.3427230046948355
+GPT-4,chain-of-thought,spacecraft component,heat resistant,3.268148148148148
+GPT-4,chain-of-thought,spacecraft component,corrosion resistant,3.3011272141706924
+GPT-4,chain-of-thought,spacecraft component,high strength,2.719939117199391
+GPT-4,chain-of-thought,underwater component,lightweight,4.097597597597598
+GPT-4,chain-of-thought,underwater component,heat resistant,3.7397660818713447
+GPT-4,chain-of-thought,underwater component,corrosion resistant,4.089743589743589
+GPT-4,chain-of-thought,underwater component,high strength,3.195618153364632
+GPT-4,chain-of-thought,safety helmet,lightweight,3.834876543209876
+GPT-4,chain-of-thought,safety helmet,heat resistant,2.830985915492958
+GPT-4,chain-of-thought,safety helmet,corrosion resistant,3.5540123456790127
+GPT-4,chain-of-thought,safety helmet,high strength,2.784037558685446
+Mixtral,zero-shot,kitchen utensil grip,lightweight,3.8070162223537682
+Mixtral,zero-shot,kitchen utensil grip,heat resistant,3.724505327245053
+Mixtral,zero-shot,kitchen utensil grip,corrosion resistant,3.887366818873668
+Mixtral,zero-shot,kitchen utensil grip,high strength,2.9699699699699695
+Mixtral,zero-shot,spacecraft component,lightweight,3.25508607198748
+Mixtral,zero-shot,spacecraft component,heat resistant,3.0074074074074075
+Mixtral,zero-shot,spacecraft component,corrosion resistant,3.352657004830918
+Mixtral,zero-shot,spacecraft component,high strength,2.8858447488584473
+Mixtral,zero-shot,underwater component,lightweight,3.184684684684685
+Mixtral,zero-shot,underwater component,heat resistant,3.008771929824561
+Mixtral,zero-shot,underwater component,corrosion resistant,3.964387464387465
+Mixtral,zero-shot,underwater component,high strength,2.9640062597809074
+Mixtral,zero-shot,safety helmet,lightweight,3.057098765432099
+Mixtral,zero-shot,safety helmet,heat resistant,2.910798122065728
+Mixtral,zero-shot,safety helmet,corrosion resistant,3.1157407407407405
+Mixtral,zero-shot,safety helmet,high strength,2.7918622848200316
+Mixtral,few-shot,kitchen utensil grip,lightweight,3.797426122824444
+Mixtral,few-shot,kitchen utensil grip,heat resistant,3.3957382039573822
+Mixtral,few-shot,kitchen utensil grip,corrosion resistant,3.6894977168949774
+Mixtral,few-shot,kitchen utensil grip,high strength,3.015015015015015
+Mixtral,few-shot,spacecraft component,lightweight,3.05320813771518
+Mixtral,few-shot,spacecraft component,heat resistant,2.934814814814815
+Mixtral,few-shot,spacecraft component,corrosion resistant,3.046698872785829
+Mixtral,few-shot,spacecraft component,high strength,3.041095890410959
+Mixtral,few-shot,underwater component,lightweight,3.295795795795796
+Mixtral,few-shot,underwater component,heat resistant,3.1842105263157894
+Mixtral,few-shot,underwater component,corrosion resistant,4.123931623931624
+Mixtral,few-shot,underwater component,high strength,3.0735524256651012
+Mixtral,few-shot,safety helmet,lightweight,3.2175925925925926
+Mixtral,few-shot,safety helmet,heat resistant,2.7010954616588423
+Mixtral,few-shot,safety helmet,corrosion resistant,3.3441358024691357
+Mixtral,few-shot,safety helmet,high strength,2.830985915492958
+Mixtral,parallel,kitchen utensil grip,lightweight,3.5631672245615453
+Mixtral,parallel,kitchen utensil grip,heat resistant,2.7701674277016743
+Mixtral,parallel,kitchen utensil grip,corrosion resistant,3.3028919330289193
+Mixtral,parallel,kitchen utensil grip,high strength,2.9729729729729732
+Mixtral,parallel,spacecraft component,lightweight,2.7464788732394365
+Mixtral,parallel,spacecraft component,heat resistant,2.368888888888889
+Mixtral,parallel,spacecraft component,corrosion resistant,2.8083735909822867
+Mixtral,parallel,spacecraft component,high strength,2.9528158295281584
+Mixtral,parallel,underwater component,lightweight,2.3228228228228227
+Mixtral,parallel,underwater component,heat resistant,2.5877192982456143
+Mixtral,parallel,underwater component,corrosion resistant,3.2834757834757835
+Mixtral,parallel,underwater component,high strength,2.971830985915493
+Mixtral,parallel,safety helmet,lightweight,2.733024691358025
+Mixtral,parallel,safety helmet,heat resistant,2.7856025039123633
+Mixtral,parallel,safety helmet,corrosion resistant,2.7700617283950617
+Mixtral,parallel,safety helmet,high strength,2.8028169014084505
+Mixtral,chain-of-thought,kitchen utensil grip,lightweight,3.434248035609677
+Mixtral,chain-of-thought,kitchen utensil grip,heat resistant,3.4535768645357687
+Mixtral,chain-of-thought,kitchen utensil grip,corrosion resistant,3.768645357686454
+Mixtral,chain-of-thought,kitchen utensil grip,high strength,3.0900900900900896
+Mixtral,chain-of-thought,spacecraft component,lightweight,3.7386541471048513
+Mixtral,chain-of-thought,spacecraft component,heat resistant,2.964444444444444
+Mixtral,chain-of-thought,spacecraft component,corrosion resistant,3.462157809983897
+Mixtral,chain-of-thought,spacecraft component,high strength,2.8401826484018264
+Mixtral,chain-of-thought,underwater component,lightweight,3.4339339339339343
+Mixtral,chain-of-thought,underwater component,heat resistant,3.491228070175439
+Mixtral,chain-of-thought,underwater component,corrosion resistant,3.913105413105413
+Mixtral,chain-of-thought,underwater component,high strength,2.8716744913928007
+Mixtral,chain-of-thought,safety helmet,lightweight,3.492283950617284
+Mixtral,chain-of-thought,safety helmet,heat resistant,3.020344287949922
+Mixtral,chain-of-thought,safety helmet,corrosion resistant,3.378086419753086
+Mixtral,chain-of-thought,safety helmet,high strength,2.6666666666666665
+MechGPT,zero-shot,kitchen utensil grip,lightweight,3.3510160849434802
+MechGPT,zero-shot,kitchen utensil grip,heat resistant,3.077625570776256
+MechGPT,zero-shot,kitchen utensil grip,corrosion resistant,3.1689497716894977
+MechGPT,zero-shot,kitchen utensil grip,high strength,3.4654654654654653
+MechGPT,zero-shot,spacecraft component,lightweight,3.215962441314554
+MechGPT,zero-shot,spacecraft component,heat resistant,2.604444444444445
+MechGPT,zero-shot,spacecraft component,corrosion resistant,2.5974235104669887
+MechGPT,zero-shot,spacecraft component,high strength,3.168949771689498
+MechGPT,zero-shot,underwater component,lightweight,3.0225225225225225
+MechGPT,zero-shot,underwater component,heat resistant,2.6198830409356724
+MechGPT,zero-shot,underwater component,corrosion resistant,2.913105413105413
+MechGPT,zero-shot,underwater component,high strength,3.519561815336463
+MechGPT,zero-shot,safety helmet,lightweight,3.087962962962963
+MechGPT,zero-shot,safety helmet,heat resistant,2.571205007824726
+MechGPT,zero-shot,safety helmet,corrosion resistant,2.8935185185185186
+MechGPT,zero-shot,safety helmet,high strength,2.970266040688576
+MechGPT,few-shot,kitchen utensil grip,lightweight,3.7871534968478966
+MechGPT,few-shot,kitchen utensil grip,heat resistant,3.228310502283105
+MechGPT,few-shot,kitchen utensil grip,corrosion resistant,3.6377473363774735
+MechGPT,few-shot,kitchen utensil grip,high strength,3.0060060060060056
+MechGPT,few-shot,spacecraft component,lightweight,3.300469483568075
+MechGPT,few-shot,spacecraft component,heat resistant,3.2414814814814816
+MechGPT,few-shot,spacecraft component,corrosion resistant,3.336553945249597
+MechGPT,few-shot,spacecraft component,high strength,2.7153729071537294
+MechGPT,few-shot,underwater component,lightweight,3.2087087087087083
+MechGPT,few-shot,underwater component,heat resistant,3.1608187134502925
+MechGPT,few-shot,underwater component,corrosion resistant,3.6225071225071224
+MechGPT,few-shot,underwater component,high strength,3.0954616588419404
+MechGPT,few-shot,safety helmet,lightweight,3.2330246913580245
+MechGPT,few-shot,safety helmet,heat resistant,3.3896713615023475
+MechGPT,few-shot,safety helmet,corrosion resistant,3.2916666666666665
+MechGPT,few-shot,safety helmet,high strength,2.985915492957746
+MechGPT,parallel,kitchen utensil grip,lightweight,3.2437971263423044
+MechGPT,parallel,kitchen utensil grip,heat resistant,2.9208523592085234
+MechGPT,parallel,kitchen utensil grip,corrosion resistant,3.2450532724505323
+MechGPT,parallel,kitchen utensil grip,high strength,3.2612612612612613
+MechGPT,parallel,spacecraft component,lightweight,4.383411580594679
+MechGPT,parallel,spacecraft component,heat resistant,3.6533333333333338
+MechGPT,parallel,spacecraft component,corrosion resistant,3.209339774557166
+MechGPT,parallel,spacecraft component,high strength,3.080669710806697
+MechGPT,parallel,underwater component,lightweight,3.689189189189189
+MechGPT,parallel,underwater component,heat resistant,2.526315789473684
+MechGPT,parallel,underwater component,corrosion resistant,3.5883190883190883
+MechGPT,parallel,underwater component,high strength,4.05320813771518
+MechGPT,parallel,safety helmet,lightweight,3.9706790123456788
+MechGPT,parallel,safety helmet,heat resistant,2.6118935837245694
+MechGPT,parallel,safety helmet,corrosion resistant,2.942901234567901
+MechGPT,parallel,safety helmet,high strength,3.463223787167449
+MechGPT,chain-of-thought,kitchen utensil grip,lightweight,4.003707991833478
+MechGPT,chain-of-thought,kitchen utensil grip,heat resistant,2.8949771689497714
+MechGPT,chain-of-thought,kitchen utensil grip,corrosion resistant,3.0791476407914766
+MechGPT,chain-of-thought,kitchen utensil grip,high strength,3.246246246246246
+MechGPT,chain-of-thought,spacecraft component,lightweight,2.729264475743349
+MechGPT,chain-of-thought,spacecraft component,heat resistant,3.841481481481482
+MechGPT,chain-of-thought,spacecraft component,corrosion resistant,4.190016103059581
+MechGPT,chain-of-thought,spacecraft component,high strength,3.053272450532725
+MechGPT,chain-of-thought,underwater component,lightweight,3.5360360360360357
+MechGPT,chain-of-thought,underwater component,heat resistant,2.5467836257309937
+MechGPT,chain-of-thought,underwater component,corrosion resistant,2.690883190883191
+MechGPT,chain-of-thought,underwater component,high strength,3.7683881064162756
+MechGPT,chain-of-thought,safety helmet,lightweight,3.4058641975308643
+MechGPT,chain-of-thought,safety helmet,heat resistant,3.4100156494522693
+MechGPT,chain-of-thought,safety helmet,corrosion resistant,3.057098765432099
+MechGPT,chain-of-thought,safety helmet,high strength,3.863849765258216
