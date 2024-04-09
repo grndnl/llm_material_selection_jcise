@@ -1,0 +1,145 @@
+model,experiment,design,criteria,material,mean_error
+GPT-4,zero-shot,kitchen utensil grip,lightweight,steel,-1.635135135135135
+GPT-4,zero-shot,kitchen utensil grip,lightweight,aluminium,0.27710843373493976
+GPT-4,zero-shot,kitchen utensil grip,lightweight,titanium,0.7640449438202247
+GPT-4,zero-shot,kitchen utensil grip,lightweight,glass,1.1139240506329113
+GPT-4,zero-shot,kitchen utensil grip,lightweight,wood,4.973684210526316
+GPT-4,zero-shot,kitchen utensil grip,lightweight,thermoplastic,4.753086419753086
+GPT-4,zero-shot,kitchen utensil grip,lightweight,elastomer,6.205479452054795
+GPT-4,zero-shot,kitchen utensil grip,lightweight,thermoset,4.373333333333333
+GPT-4,zero-shot,kitchen utensil grip,lightweight,composite,0.948051948051948
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,steel,-0.863013698630137
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,aluminium,-4.205479452054795
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,titanium,2.041095890410959
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,glass,-0.1506849315068493
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,wood,1.0273972602739727
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,thermoplastic,1.6575342465753424
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,elastomer,2.164383561643836
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,thermoset,2.5753424657534247
+GPT-4,zero-shot,kitchen utensil grip,heat resistant,composite,1.1232876712328768
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,steel,2.4794520547945207
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,aluminium,2.0684931506849313
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,titanium,3.9452054794520546
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,glass,3.5205479452054793
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,wood,-1.356164383561644
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,thermoplastic,3.589041095890411
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,elastomer,2.958904109589041
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,thermoset,1.8082191780821917
+GPT-4,zero-shot,kitchen utensil grip,corrosion resistant,composite,2.3013698630136985
+GPT-4,zero-shot,kitchen utensil grip,high strength,steel,3.891891891891892
+GPT-4,zero-shot,kitchen utensil grip,high strength,aluminium,0.7432432432432432
+GPT-4,zero-shot,kitchen utensil grip,high strength,titanium,1.1756756756756757
+GPT-4,zero-shot,kitchen utensil grip,high strength,glass,-4.472972972972973
+GPT-4,zero-shot,kitchen utensil grip,high strength,wood,-1.2972972972972974
+GPT-4,zero-shot,kitchen utensil grip,high strength,thermoplastic,-0.013513513513513514
+GPT-4,zero-shot,kitchen utensil grip,high strength,elastomer,0.918918918918919
+GPT-4,zero-shot,kitchen utensil grip,high strength,thermoset,1.472972972972973
+GPT-4,zero-shot,kitchen utensil grip,high strength,composite,1.554054054054054
+GPT-4,zero-shot,spacecraft component,lightweight,steel,-3.9577464788732395
+GPT-4,zero-shot,spacecraft component,lightweight,aluminium,1.9295774647887325
+GPT-4,zero-shot,spacecraft component,lightweight,titanium,1.5633802816901408
+GPT-4,zero-shot,spacecraft component,lightweight,glass,-0.5492957746478874
+GPT-4,zero-shot,spacecraft component,lightweight,wood,-2.7183098591549295
+GPT-4,zero-shot,spacecraft component,lightweight,thermoplastic,2.4225352112676055
+GPT-4,zero-shot,spacecraft component,lightweight,elastomer,0.7183098591549296
+GPT-4,zero-shot,spacecraft component,lightweight,thermoset,2.3661971830985915
+GPT-4,zero-shot,spacecraft component,lightweight,composite,2.1971830985915495
+GPT-4,zero-shot,spacecraft component,heat resistant,steel,1.8666666666666667
+GPT-4,zero-shot,spacecraft component,heat resistant,aluminium,-3.1066666666666665
+GPT-4,zero-shot,spacecraft component,heat resistant,titanium,1.2666666666666666
+GPT-4,zero-shot,spacecraft component,heat resistant,glass,4.973333333333334
+GPT-4,zero-shot,spacecraft component,heat resistant,wood,-1.0133333333333334
+GPT-4,zero-shot,spacecraft component,heat resistant,thermoplastic,-2.6266666666666665
+GPT-4,zero-shot,spacecraft component,heat resistant,elastomer,-1.4933333333333334
+GPT-4,zero-shot,spacecraft component,heat resistant,thermoset,2.533333333333333
+GPT-4,zero-shot,spacecraft component,heat resistant,composite,0.17333333333333334
+GPT-4,zero-shot,spacecraft component,corrosion resistant,steel,-0.4057971014492754
+GPT-4,zero-shot,spacecraft component,corrosion resistant,aluminium,2.347826086956522
+GPT-4,zero-shot,spacecraft component,corrosion resistant,titanium,1.2318840579710144
+GPT-4,zero-shot,spacecraft component,corrosion resistant,glass,3.9130434782608696
+GPT-4,zero-shot,spacecraft component,corrosion resistant,wood,-1.2173913043478262
+GPT-4,zero-shot,spacecraft component,corrosion resistant,thermoplastic,5.072463768115942
+GPT-4,zero-shot,spacecraft component,corrosion resistant,elastomer,-0.08695652173913043
+GPT-4,zero-shot,spacecraft component,corrosion resistant,thermoset,3.739130434782609
+GPT-4,zero-shot,spacecraft component,corrosion resistant,composite,2.1884057971014492
+GPT-4,zero-shot,spacecraft component,high strength,steel,3.164383561643836
+GPT-4,zero-shot,spacecraft component,high strength,aluminium,0.3150684931506849
+GPT-4,zero-shot,spacecraft component,high strength,titanium,1.1095890410958904
+GPT-4,zero-shot,spacecraft component,high strength,glass,-3.1232876712328768
+GPT-4,zero-shot,spacecraft component,high strength,wood,-0.8082191780821918
+GPT-4,zero-shot,spacecraft component,high strength,thermoplastic,1.3287671232876712
+GPT-4,zero-shot,spacecraft component,high strength,elastomer,-2.684931506849315
+GPT-4,zero-shot,spacecraft component,high strength,thermoset,1.452054794520548
+GPT-4,zero-shot,spacecraft component,high strength,composite,1.5068493150684932
+GPT-4,zero-shot,underwater component,lightweight,steel,-2.6486486486486487
+GPT-4,zero-shot,underwater component,lightweight,aluminium,0.5135135135135135
+GPT-4,zero-shot,underwater component,lightweight,titanium,0.3108108108108108
+GPT-4,zero-shot,underwater component,lightweight,glass,3.0
+GPT-4,zero-shot,underwater component,lightweight,wood,5.472972972972973
+GPT-4,zero-shot,underwater component,lightweight,thermoplastic,4.72972972972973
+GPT-4,zero-shot,underwater component,lightweight,elastomer,4.878378378378378
+GPT-4,zero-shot,underwater component,lightweight,thermoset,3.7162162162162162
+GPT-4,zero-shot,underwater component,lightweight,composite,0.6351351351351351
+GPT-4,zero-shot,underwater component,heat resistant,steel,3.3947368421052633
+GPT-4,zero-shot,underwater component,heat resistant,aluminium,-2.3552631578947367
+GPT-4,zero-shot,underwater component,heat resistant,titanium,0.7368421052631579
+GPT-4,zero-shot,underwater component,heat resistant,glass,4.105263157894737
+GPT-4,zero-shot,underwater component,heat resistant,wood,0.02631578947368421
+GPT-4,zero-shot,underwater component,heat resistant,thermoplastic,0.75
+GPT-4,zero-shot,underwater component,heat resistant,elastomer,0.5131578947368421
+GPT-4,zero-shot,underwater component,heat resistant,thermoset,2.8421052631578947
+GPT-4,zero-shot,underwater component,heat resistant,composite,0.6973684210526315
+GPT-4,zero-shot,underwater component,corrosion resistant,steel,-2.2435897435897436
+GPT-4,zero-shot,underwater component,corrosion resistant,aluminium,1.5256410256410255
+GPT-4,zero-shot,underwater component,corrosion resistant,titanium,1.0128205128205128
+GPT-4,zero-shot,underwater component,corrosion resistant,glass,5.038461538461538
+GPT-4,zero-shot,underwater component,corrosion resistant,wood,2.3205128205128207
+GPT-4,zero-shot,underwater component,corrosion resistant,thermoplastic,5.371794871794871
+GPT-4,zero-shot,underwater component,corrosion resistant,elastomer,4.705128205128205
+GPT-4,zero-shot,underwater component,corrosion resistant,thermoset,3.9743589743589745
+GPT-4,zero-shot,underwater component,corrosion resistant,composite,2.871794871794872
+GPT-4,zero-shot,underwater component,high strength,steel,3.1971830985915495
+GPT-4,zero-shot,underwater component,high strength,aluminium,-1.1267605633802817
+GPT-4,zero-shot,underwater component,high strength,titanium,0.971830985915493
+GPT-4,zero-shot,underwater component,high strength,glass,-0.4507042253521127
+GPT-4,zero-shot,underwater component,high strength,wood,-0.39436619718309857
+GPT-4,zero-shot,underwater component,high strength,thermoplastic,1.7464788732394365
+GPT-4,zero-shot,underwater component,high strength,elastomer,0.7887323943661971
+GPT-4,zero-shot,underwater component,high strength,thermoset,2.0140845070422535
+GPT-4,zero-shot,underwater component,high strength,composite,1.1830985915492958
+GPT-4,zero-shot,safety helmet,lightweight,steel,-4.583333333333333
+GPT-4,zero-shot,safety helmet,lightweight,aluminium,1.1666666666666667
+GPT-4,zero-shot,safety helmet,lightweight,titanium,-1.3055555555555556
+GPT-4,zero-shot,safety helmet,lightweight,glass,-0.3611111111111111
+GPT-4,zero-shot,safety helmet,lightweight,wood,0.3888888888888889
+GPT-4,zero-shot,safety helmet,lightweight,thermoplastic,4.958333333333333
+GPT-4,zero-shot,safety helmet,lightweight,elastomer,2.9305555555555554
+GPT-4,zero-shot,safety helmet,lightweight,thermoset,3.3055555555555554
+GPT-4,zero-shot,safety helmet,lightweight,composite,2.375
+GPT-4,zero-shot,safety helmet,heat resistant,steel,-0.08450704225352113
+GPT-4,zero-shot,safety helmet,heat resistant,aluminium,-0.9436619718309859
+GPT-4,zero-shot,safety helmet,heat resistant,titanium,1.9295774647887325
+GPT-4,zero-shot,safety helmet,heat resistant,glass,0.9436619718309859
+GPT-4,zero-shot,safety helmet,heat resistant,wood,-0.5915492957746479
+GPT-4,zero-shot,safety helmet,heat resistant,thermoplastic,-1.1408450704225352
+GPT-4,zero-shot,safety helmet,heat resistant,elastomer,-2.3943661971830985
+GPT-4,zero-shot,safety helmet,heat resistant,thermoset,3.3098591549295775
+GPT-4,zero-shot,safety helmet,heat resistant,composite,-0.36619718309859156
+GPT-4,zero-shot,safety helmet,corrosion resistant,steel,1.0277777777777777
+GPT-4,zero-shot,safety helmet,corrosion resistant,aluminium,3.5833333333333335
+GPT-4,zero-shot,safety helmet,corrosion resistant,titanium,3.138888888888889
+GPT-4,zero-shot,safety helmet,corrosion resistant,glass,-0.7638888888888888
+GPT-4,zero-shot,safety helmet,corrosion resistant,wood,-0.9444444444444444
+GPT-4,zero-shot,safety helmet,corrosion resistant,thermoplastic,3.638888888888889
+GPT-4,zero-shot,safety helmet,corrosion resistant,elastomer,1.2777777777777777
+GPT-4,zero-shot,safety helmet,corrosion resistant,thermoset,2.9583333333333335
+GPT-4,zero-shot,safety helmet,corrosion resistant,composite,1.9305555555555556
+GPT-4,zero-shot,safety helmet,high strength,steel,1.7183098591549295
+GPT-4,zero-shot,safety helmet,high strength,aluminium,-0.7887323943661971
+GPT-4,zero-shot,safety helmet,high strength,titanium,1.6338028169014085
+GPT-4,zero-shot,safety helmet,high strength,glass,-1.3380281690140845
+GPT-4,zero-shot,safety helmet,high strength,wood,-1.1830985915492958
+GPT-4,zero-shot,safety helmet,high strength,thermoplastic,1.2253521126760563
+GPT-4,zero-shot,safety helmet,high strength,elastomer,-3.267605633802817
+GPT-4,zero-shot,safety helmet,high strength,thermoset,1.9577464788732395
+GPT-4,zero-shot,safety helmet,high strength,composite,0.7887323943661971
