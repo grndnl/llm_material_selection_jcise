@@ -3,13 +3,14 @@ from openai import OpenAI
 from langsmith import Client
 from streamlit_feedback import streamlit_feedback
 import uuid
+from langsmith.wrappers import wrap_openai
 
 
-client = Client()
+langsmith_client = Client()
 
 st.set_page_config(
     page_title="LLM Material Selection",
-    page_icon="",
+    page_icon="🧊",
 )
 
 openai_api_key = st.secrets["OPENAI_API_KEY"]
@@ -35,6 +36,9 @@ if "messages" not in st.session_state:
 if "response" not in st.session_state:
     st.session_state["response"] = None
 
+if "run_id" not in st.session_state:
+    st.session_state["run_id"] = None
+
 messages = st.session_state.messages
 for msg in messages:
     st.chat_message(msg["role"]).write(msg["content"])
@@ -45,8 +49,10 @@ if prompt := st.chat_input(placeholder=get_default()):
     if not openai_api_key:
         st.info("Please add your OpenAI API key to continue.")
         st.stop()
-    client = OpenAI(api_key=openai_api_key)
-    response = client.chat.completions.create(model="gpt-4-0125-preview", messages=messages)
+    run_id = uuid.uuid4()
+    st.session_state["run_id"] = run_id
+    client = wrap_openai(OpenAI(api_key=openai_api_key))
+    response = client.chat.completions.create(model="gpt-3.5-turbo-0125", messages=messages, langsmith_extra={"run_id": run_id})
     st.session_state["response"] = response.choices[0].message.content
     with st.chat_message("assistant"):
         messages.append({"role": "assistant", "content": st.session_state["response"]})
@@ -72,15 +78,17 @@ if st.session_state["response"]:
             # Record the feedback with the formulated feedback type string
             # and optional comment
             st.write("Recording feedback...")
-            feedback_record = client.create_feedback(
-                run_id=uuid.uuid4(),
+            feedback_record = langsmith_client.create_feedback(
+                run_id=st.session_state.run_id,
                 score=score,
-                key='feedback'
+                key='feedback',
+                # project_id='c716f4c2-3719-413c-8b63-43637cb7a1a1'
             )
             st.session_state.feedback = {
                 "feedback_id": str(feedback_record.id),
                 "score": score,
             }
             st.write("Feedback recorded!")
+            st.write(st.session_state.feedback)
         else:
             st.warning("Invalid feedback score.")
