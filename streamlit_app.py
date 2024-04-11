@@ -12,6 +12,7 @@ langsmith_client = Client()
 st.set_page_config(
     page_title="LLM Material Selection",
     page_icon="🧊",
+    layout="wide"
 )
 
 # metal 3d cube emoji
@@ -27,48 +28,101 @@ def get_default():
         design = random.choice(designs)
         criterion = random.choice(criteria)
 
-        default = "I would like to design a {design} that is {criterion}.".format(design=design, criterion=criterion)
+        default = "A {design} that is {criterion}.".format(design=design, criterion=criterion)
         default = str(default)
 
         return default
 
 
 def run_model(model, messages):
-    if model == 'zero-shot':
-        response = client.chat.completions.create(model="gpt-3.5-turbo-0125", messages=messages, langsmith_extra={"run_id": run_id})
-    return response.choices[0].message.content
+    materials = ["Steel", "Aluminium", "Titanium", "Glass", "Wood", "Thermoplastic", "Elastomer", "Thermoset", "Composite"]
+    full_response = "On a scale of 0-10, where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', here are some material scores:\n\n"
+    for material in materials:
+        if model == 'zero-shot':
+            user_input = messages[-1]["content"]
+            message = compile_question('zero-shot', user_input=user_input, material=material)
+            message = {"role": "user", "content": message}
+            response = client.chat.completions.create(model="gpt-3.5-turbo-0125", messages=[message], langsmith_extra={"run_id": run_id})
+            full_response += f"{material}: {response.choices[0].message.content}\n\n"
+    return full_response
 
 
-# def submit_feedback(user_response):
-#     st.toast(f"Feedback submitted: {user_response}", icon="👍")
-    # st.write("here, clicked on feedback0000000")
-    #
-    # # Get the score from the selected feedback option's score mapping
-    # score = user_response[feedback_zero_shot["score"]]
-    # st.session_state.score_zero_shot = score
-    #
-    # st.write("here, clicked on feedback")
-    #
-    # if score is not None:
-    #     # Record the feedback with the formulated feedback type string
-    #     # and optional comment
-    #     st.write("Recording feedback...")
-    #     feedback_record = langsmith_client.create_feedback(
-    #         run_id=st.session_state["run_id_zero_shot"],
-    #         score=score,
-    #         key='feedback',
-    #         # project_id='c716f4c2-3719-413c-8b63-43637cb7a1a1'
-    #     )
-    #     st.session_state.feedback = {
-    #         "feedback_id": str(feedback_record.id),
-    #         "score": score,
-    #     }
-    #     st.write("Feedback recorded!")
-    #     st.write(st.session_state.feedback)
-    # else:
-    #     st.warning("Invalid feedback score.")
+few_shot = """
+        - Example 1
+        Design: Bicycle Grip
+        Criterion: Impact Resistant
+        You are tasked with designing the grip of a bicycle frame which should be impact resistant.
+        How well do you think each of the provided materials would perform in this application? (Use a scale of 0-10 where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent')
+    
+        Steel: 6 
+        Aluminium: 5 
+        Titanium: 4 
+        Glass: 2 
+        Wood: 8 
+        Thermoplastic: 9 
+        Elastomer: 9 
+        Thermoset: 6 
+        Composite: 7 
+    
+        - Example 2
+        Design: Medical Implant Grip
+        Criterion: Durable
+        You are tasked with designing the grip of a medical implant which should be durable. How well do you
+        think each of the provided materials would perform in this application? (Use a scale of 0-10 where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent')
+        
+        Steel: 7 
+        Aluminium: 2 
+        Titanium: 9 
+        Glass: 5 
+        Wood: 0 
+        Thermoplastic: 8 
+        Elastomer: 8 
+        Thermoset: 7 
+        Composite: 7 
+        """
 
 
+def compile_question(question_type, user_input, material, count=0, reasoning=None):
+    if question_type == 'zero-shot':
+        question = f"You are a material science and design engineer expert.\n" \
+                   f"You are tasked with designing a {user_input}.\n" \
+                   f"How well do you think {material} would perform in this application? Answer on a scale of 0-10, " \
+                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words."
+
+    elif question_type == 'few-shot':
+        question = f"You are a material science and design engineer expert.\n" \
+                   f"Below are two examples of how materials would perform from 0-10 given a design and a criterion:\n" \
+                   f"{few_shot}\n" \
+                   f"You are tasked with designing a {user_input}.\n" \
+                   f"How well do you think {material} would perform in this application? Answer on a scale of 0-10, " \
+                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
+
+    elif question_type == 'parallel':
+        question = f"You are a material science and design engineer expert.\n" \
+                   f"You are tasked with designing a {user_input}.\n" \
+                   f"For each of the following materials, how well do you think they would perform in this application? Answer on a scale of 0-10, " \
+                   f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', just with the integers separated by commas, and no other words or explanation. Be concise and answer for all 9 materials.\n" \
+                   f"Materials:\n{material}\nAnswers:\n"
+
+    elif question_type == 'chain-of-thought':
+        if count == 0:
+            question = f"You are a material science and design engineer expert.\n" \
+                   f"You are tasked with designing a {user_input}.\n" \
+                       f"How well do you think {material} would perform in this application?"
+        else:
+            question = f"You are a material science and design engineer expert.\n" \
+                   f"You are tasked with designing a {user_input}.\n" \
+                       f"How well do you think {material} would perform in this application? Below is some reasoning that you can follow:\n\n" \
+                       f"{reasoning}\n\n" \
+                       f"Answer on a scale of 0-10, " \
+                       f"where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', with just the number and no other words.\n"
+
+    else:
+        raise ValueError("Invalid question type")
+    return question
+
+
+########################################################################################################################
 with st.sidebar:
     "[View the repository for this project](https://github.com/grndnl/llm_material_selection_jcise)"
     "[Link to paper](to be added)"
@@ -122,7 +176,7 @@ with st.container():
     # disable chat
     st.session_state["chat_disabled"] = True
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
 
 if prompt or st.session_state["messages_zero_shot"]:
     with col1:
@@ -182,6 +236,16 @@ if prompt or st.session_state["messages_zero_shot"]:
                 # st.write(st.session_state.feedback)
             else:
                 st.warning("Invalid feedback score.")
+
+    with col2:
+        st.write("### Few-shot")
+
+    with col3:
+        st.write("### Parallel")
+
+    with col4:
+        st.write("### Chain-of-thought")
+
 
 st.write("# Session state:")
 st.write(st.session_state)
