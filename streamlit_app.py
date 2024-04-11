@@ -15,7 +15,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# metal 3d cube emoji
 
 def get_default():
     if st.session_state["chat_disabled"]:
@@ -34,16 +33,23 @@ def get_default():
         return default
 
 
-def run_model(model, messages):
+def run_model(model, prior_messages):
     materials = ["Steel", "Aluminium", "Titanium", "Glass", "Wood", "Thermoplastic", "Elastomer", "Thermoset", "Composite"]
     full_response = "On a scale of 0-10, where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', here are some material scores:\n\n"
     for material in materials:
-        if model == 'zero-shot':
-            user_input = messages[-1]["content"]
-            message = compile_question('zero-shot', user_input=user_input, material=material)
-            message = {"role": "user", "content": message}
-            response = client.chat.completions.create(model="gpt-3.5-turbo-0125", messages=[message], langsmith_extra={"run_id": run_id})
-            full_response += f"{material}: {response.choices[0].message.content}\n\n"
+        user_input = prior_messages[-1]["content"]
+        message = compile_question(model, user_input=user_input, material=material)
+        message = {"role": "user", "content": message}
+
+        if model == 'few-shot':
+            run_id = st.session_state["run_id_few_shot"]
+        elif model == 'zero-shot':
+            run_id = st.session_state["run_id_zero_shot"]
+        else:
+            raise ValueError("Invalid model type")
+
+        response = client.chat.completions.create(model="gpt-3.5-turbo-0125", messages=[message], langsmith_extra={"run_id": run_id})
+        full_response += f"{material}: {response.choices[0].message.content}\n\n"
     return full_response
 
 
@@ -122,6 +128,10 @@ def compile_question(question_type, user_input, material, count=0, reasoning=Non
     return question
 
 
+# Get the score mapping based on the selected feedback option
+scores = {"👍": 1, "👎": 0}
+
+
 ########################################################################################################################
 with st.sidebar:
     "[View the repository for this project](https://github.com/grndnl/llm_material_selection_jcise)"
@@ -139,14 +149,17 @@ if "messages" not in st.session_state:
 if "messages_zero_shot" not in st.session_state:
     st.session_state.messages_zero_shot = []
 
-# if "response_zero_shot" not in st.session_state:
-#     st.session_state["response_zero_shot"] = None
+if "messages_few_shot" not in st.session_state:
+    st.session_state.messages_few_shot = []
 
 if "run_id" not in st.session_state:
     st.session_state["run_id"] = None
 
 if "run_id_zero_shot" not in st.session_state:
     st.session_state["run_id_zero_shot"] = None
+
+if "run_id_few_shot" not in st.session_state:
+    st.session_state["run_id_few_shot"] = None
 
 if "chat_disabled" not in st.session_state:
     st.session_state["chat_disabled"] = False
@@ -157,6 +170,9 @@ if "default" not in st.session_state:
 if "score_zero_shot" not in st.session_state:
     st.session_state["score_zero_shot"] = None
 
+if "score_few_shot" not in st.session_state:
+    st.session_state["score_few_shot"] = None
+
 messages = st.session_state.messages
 display_messages = st.container()
 for msg in messages:
@@ -165,6 +181,7 @@ default = st.session_state["default"]
 disabled = st.session_state["chat_disabled"]
 
 messages_zero_shot = st.session_state.messages_zero_shot
+messages_few_shot = st.session_state.messages_few_shot
 
 
 with st.container():
@@ -191,10 +208,11 @@ if prompt or st.session_state["messages_zero_shot"]:
             st.session_state["run_id_zero_shot"] = run_id
             client = wrap_openai(OpenAI(api_key=st.secrets["OPENAI_API_KEY"]))
 
-            response = run_model('zero-shot', messages)
-
+            with st.spinner("Generating..."):
+                response = run_model('zero-shot', messages)
             st.session_state["messages_zero_shot"].append({"role": "assistant", "content": response})
-            display_messages_zero_shot.chat_message("assistant").write(response)
+
+            display_messages_zero_shot.chat_message("assistant").write(st.session_state["messages_zero_shot"][-1]["content"])
 
         if st.session_state["messages_zero_shot"]:
             feedback_zero_shot = streamlit_feedback(
@@ -202,43 +220,69 @@ if prompt or st.session_state["messages_zero_shot"]:
                 # optional_text_label="[Optional] Please provide an explanation",
                 key=f"feedback_{st.session_state['run_id_zero_shot']}") #, disable_with_score=st.session_state.score_zero_shot) #, on_submit=submit_feedback)
 
-            # Get the score mapping based on the selected feedback option
-            scores = {"👍": 1, "👎": 0}
-            # st.write("here, reloaded score or not")
-            # st.write(feedback_zero_shot)
-
-            # if f"feedback_{st.session_state['run_id_zero_shot']}":
-            #     st.write("here, clicked on feedback1")
-
         if feedback_zero_shot:
             # Get the score from the selected feedback option's score mapping
             score = scores[feedback_zero_shot["score"]]
-            st.toast(f"Thanks for submitting feedback!", icon="👍")
             st.session_state.score_zero_shot = score
-
-            # st.write("here, clicked on feedback2")
 
             if score is not None:
                 # Record the feedback with the formulated feedback type string
-                # and optional comment
-                # st.write("Recording feedback...")
                 feedback_record = langsmith_client.create_feedback(
                     run_id=st.session_state["run_id_zero_shot"],
                     score=score,
                     key='feedback',
-                    # project_id='c716f4c2-3719-413c-8b63-43637cb7a1a1'
                 )
                 st.session_state.feedback = {
                     "feedback_id": str(feedback_record.id),
                     "score": score,
                 }
-                # st.write("Feedback recorded!")
-                # st.write(st.session_state.feedback)
+                st.toast(f"Thanks for submitting feedback!", icon="👍")
             else:
                 st.warning("Invalid feedback score.")
 
     with col2:
         st.write("### Few-shot")
+
+        display_messages_few_shot = st.container()
+        for msg in messages_few_shot:
+            display_messages_few_shot.chat_message(msg["role"]).write(msg["content"])
+
+        if not st.session_state["messages_few_shot"]:
+            run_id_few_shot = uuid.uuid4()
+            st.session_state["run_id_few_shot"] = run_id_few_shot
+            client = wrap_openai(OpenAI(api_key=st.secrets["OPENAI_API_KEY"]))
+
+            with st.spinner("Generating..."):
+                response = run_model('few-shot', messages)
+
+            st.session_state["messages_few_shot"].append({"role": "assistant", "content": response})
+            display_messages_few_shot.chat_message("assistant").write(st.session_state["messages_few_shot"][-1]["content"])
+
+        if st.session_state["messages_few_shot"]:
+            feedback_few_shot = streamlit_feedback(
+                feedback_type='thumbs',
+                # optional_text_label="[Optional] Please provide an explanation",
+                key=f"feedback_{st.session_state['run_id_few_shot']}")  # , disable_with_score=st.session_state.score_zero_shot) #, on_submit=submit_feedback)
+
+        if feedback_few_shot:
+            # Get the score from the selected feedback option's score mapping
+            score = scores[feedback_few_shot["score"]]
+            st.session_state.score_few_shot = score
+
+            if score is not None:
+                # Record the feedback with the formulated feedback type string
+                feedback_record = langsmith_client.create_feedback(
+                    run_id=st.session_state["run_id_few_shot"],
+                    score=score,
+                    key='feedback',
+                )
+                st.session_state.feedback = {
+                    "feedback_id": str(feedback_record.id),
+                    "score": score,
+                }
+                st.toast(f"Thanks for submitting feedback!", icon="👍")
+            else:
+                st.warning("Invalid feedback score.")
 
     with col3:
         st.write("### Parallel")
