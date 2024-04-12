@@ -5,6 +5,7 @@ from streamlit_feedback import streamlit_feedback
 import uuid
 from langsmith.wrappers import wrap_openai
 import random
+import time
 
 
 langsmith_client = Client()
@@ -35,18 +36,36 @@ def get_default():
 
 def run_model(model, prior_messages):
     materials = ["Steel", "Aluminium", "Titanium", "Glass", "Wood", "Thermoplastic", "Elastomer", "Thermoset", "Composite"]
-    full_response = "On a scale of 0-10, where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent', here are some material scores:\n\n"
-    for material in materials:
-        user_input = prior_messages[-1]["content"]
-        message = compile_question(model, user_input=user_input, material=material)
-        message = {"role": "user", "content": message}
+    full_response = ""
+    if model == 'parallel':
+        materials = [", ".join(materials)]
 
-        if model == 'few-shot':
-            run_id = st.session_state["run_id_few_shot"]
-        elif model == 'zero-shot':
-            run_id = st.session_state["run_id_zero_shot"]
+    for material in materials:
+        user_input = prior_messages[-2]["content"]
+
+        if model == 'chain-of-thought':
+            count = 0
+            reasoning_question = compile_question(model, user_input=user_input, material=material, count=count)
+            reasoning_question = {"role": "user", "content": reasoning_question}
+            reasoning = client.chat.completions.create(model="gpt-3.5-turbo-0125", messages=[reasoning_question])
+
+            count = 1
+            run_id = st.session_state["run_id_chain_of_thought"]
+            message = compile_question(model, user_input=user_input, material=material, count=count, reasoning=reasoning.choices[0].message.content)
+            message = {"role": "user", "content": message}
+
         else:
-            raise ValueError("Invalid model type")
+            message = compile_question(model, user_input=user_input, material=material)
+            message = {"role": "user", "content": message}
+
+            if model == 'few-shot':
+                run_id = st.session_state["run_id_few_shot"]
+            elif model == 'zero-shot':
+                run_id = st.session_state["run_id_zero_shot"]
+            elif model == 'parallel':
+                run_id = st.session_state["run_id_parallel"]
+            else:
+                raise ValueError("Invalid model type")
 
         response = client.chat.completions.create(model="gpt-3.5-turbo-0125", messages=[message], langsmith_extra={"run_id": run_id})
         full_response += f"{material}: {response.choices[0].message.content}\n\n"
@@ -152,6 +171,12 @@ if "messages_zero_shot" not in st.session_state:
 if "messages_few_shot" not in st.session_state:
     st.session_state.messages_few_shot = []
 
+if "messages_parallel" not in st.session_state:
+    st.session_state.messages_parallel = []
+
+if "messages_chain_of_thought" not in st.session_state:
+    st.session_state.messages_chain_of_thought = []
+
 if "run_id" not in st.session_state:
     st.session_state["run_id"] = None
 
@@ -160,6 +185,12 @@ if "run_id_zero_shot" not in st.session_state:
 
 if "run_id_few_shot" not in st.session_state:
     st.session_state["run_id_few_shot"] = None
+
+if "run_id_parallel" not in st.session_state:
+    st.session_state["run_id_parallel"] = None
+
+if "run_id_chain_of_thought" not in st.session_state:
+    st.session_state["run_id_chain_of_thought"] = None
 
 if "chat_disabled" not in st.session_state:
     st.session_state["chat_disabled"] = False
@@ -173,6 +204,12 @@ if "score_zero_shot" not in st.session_state:
 if "score_few_shot" not in st.session_state:
     st.session_state["score_few_shot"] = None
 
+if "score_parallel" not in st.session_state:
+    st.session_state["score_parallel"] = None
+
+if "score_chain_of_thought" not in st.session_state:
+    st.session_state["score_chain_of_thought"] = None
+
 messages = st.session_state.messages
 display_messages = st.container()
 for msg in messages:
@@ -182,6 +219,8 @@ disabled = st.session_state["chat_disabled"]
 
 messages_zero_shot = st.session_state.messages_zero_shot
 messages_few_shot = st.session_state.messages_few_shot
+messages_parallel = st.session_state.messages_parallel
+messages_chain_of_thought = st.session_state.messages_chain_of_thought
 
 
 with st.container():
@@ -189,6 +228,11 @@ with st.container():
     if prompt:
         display_messages.chat_message("user").write(prompt)
         messages.append({"role": "user", "content": prompt})
+
+        time.sleep(0.5)
+        bot_message = "I will evaluate a set of materials on a scale of 0 to 10, where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent'."
+        display_messages.chat_message("assistant").write(bot_message)
+        messages.append({"role": "assistant", "content": bot_message})
 
     # disable chat
     st.session_state["chat_disabled"] = True
@@ -280,16 +324,108 @@ if prompt or st.session_state["messages_zero_shot"]:
                     "feedback_id": str(feedback_record.id),
                     "score": score,
                 }
-                st.toast(f"Thanks for submitting feedback!", icon="👍")
+                st.toast(f"Thanks for submitting feedback!", icon="👍", )
             else:
                 st.warning("Invalid feedback score.")
 
     with col3:
         st.write("### Parallel")
 
+        display_messages_parallel = st.container()
+        for msg in messages_parallel:
+            display_messages_parallel.chat_message(msg["role"]).write(msg["content"])
+
+        if not st.session_state["messages_parallel"]:
+            run_id_parallel = uuid.uuid4()
+            st.session_state["run_id_parallel"] = run_id_parallel
+            client = wrap_openai(OpenAI(api_key=st.secrets["OPENAI_API_KEY"]))
+
+            with st.spinner("Generating..."):
+                response = run_model('parallel', messages)
+
+                # remove extra text from response
+                response = response.split("Steel, Aluminium, Titanium, Glass, Wood, Thermoplastic, Elastomer, Thermoset, Composite:")[1]
+
+            st.session_state["messages_parallel"].append({"role": "assistant", "content": response})
+            display_messages_parallel.chat_message("assistant").write(
+                st.session_state["messages_parallel"][-1]["content"])
+
+        if st.session_state["messages_parallel"]:
+            feedback_parallel = streamlit_feedback(
+                feedback_type='thumbs',
+                # optional_text_label="[Optional] Please provide an explanation",
+                key=f"feedback_{st.session_state['run_id_parallel']}")  # , disable_with_score=st.session_state.score_zero_shot) #, on_submit=submit_feedback)
+
+        if feedback_parallel:
+            # Get the score from the selected feedback option's score mapping
+            score = scores[feedback_parallel["score"]]
+            st.session_state.score_parallel = score
+
+            if score is not None:
+                # Record the feedback with the formulated feedback type string
+                feedback_record = langsmith_client.create_feedback(
+                    run_id=st.session_state["run_id_parallel"],
+                    score=score,
+                    key='feedback',
+                )
+                st.session_state.feedback = {
+                    "feedback_id": str(feedback_record.id),
+                    "score": score,
+                }
+                st.toast(f"Thanks for submitting feedback!", icon="👍", )
+            else:
+                st.warning("Invalid feedback score.")
+
     with col4:
         st.write("### Chain-of-thought")
 
+        display_messages_chain_of_thought = st.container()
+        for msg in messages_chain_of_thought:
+            display_messages_chain_of_thought.chat_message(msg["role"]).write(msg["content"])
 
-st.write("# Session state:")
-st.write(st.session_state)
+        if not st.session_state["messages_chain_of_thought"]:
+            run_id_chain_of_thought = uuid.uuid4()
+            st.session_state["run_id_chain_of_thought"] = run_id_chain_of_thought
+            client = wrap_openai(OpenAI(api_key=st.secrets["OPENAI_API_KEY"]))
+
+            with st.spinner("Generating..."):
+                response = run_model('chain-of-thought', messages)
+
+            st.session_state["messages_chain_of_thought"].append({"role": "assistant", "content": response})
+            display_messages_chain_of_thought.chat_message("assistant").write(
+                st.session_state["messages_chain_of_thought"][-1]["content"])
+
+        if st.session_state["messages_chain_of_thought"]:
+            feedback_chain_of_thought = streamlit_feedback(
+                feedback_type='thumbs',
+                # optional_text_label="[Optional] Please provide an explanation",
+                key=f"feedback_{st.session_state['run_id_chain_of_thought']}")  # , disable_with_score=st.session_state.score_zero_shot) #, on_submit=submit_feedback)
+
+        if feedback_chain_of_thought:
+            # Get the score from the selected feedback option's score mapping
+            score = scores[feedback_chain_of_thought["score"]]
+            st.session_state.score_chain_of_thought = score
+
+            if score is not None:
+                # Record the feedback with the formulated feedback type string
+                feedback_record = langsmith_client.create_feedback(
+                    run_id=st.session_state["run_id_chain_of_thought"],
+                    score=score,
+                    key='feedback',
+                )
+                st.session_state.feedback = {
+                    "feedback_id": str(feedback_record.id),
+                    "score": score,
+                }
+                st.toast(f"Thanks for submitting feedback!", icon="👍", )
+            else:
+                st.warning("Invalid feedback score.")
+
+if st.session_state["messages_chain_of_thought"]:
+    time.sleep(1)
+    bot_message = "Please submit feedback using the thumbs up or thumbs down buttons, and refresh the page to evaluate a new design!"
+    display_messages.chat_message("assistant").write(bot_message)
+    messages.append({"role": "assistant", "content": bot_message})
+
+# st.write("# Session state:")
+# st.write(st.session_state)
