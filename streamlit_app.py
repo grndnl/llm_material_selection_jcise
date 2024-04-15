@@ -156,7 +156,7 @@ with st.sidebar:
     st.info("[View the repository for this project](https://github.com/grndnl/llm_material_selection_jcise)\n"
             "[View the paper](to be added)")
     st.info("**Data collection notice:**\n"
-            "This app collects and stores the textual user input and any feedback selected by the user. ")
+            "We collect and store the textual user input and any feedback selected by the user. ")
 
 
 st.title("Get material feedback from GPT-4")
