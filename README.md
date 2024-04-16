@@ -1,5 +1,6 @@
 # Evaluating Large Language Models for Material Selection
-JCISE publication
+[📄 Paper link](to be added)
+[🧊 Demo website](https://material-selection-llms.streamlit.app/)
 
 ![img.png](img.png)
 
