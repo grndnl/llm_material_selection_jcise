@@ -213,7 +213,7 @@ if "score_chain_of_thought" not in st.session_state:
     st.session_state["score_chain_of_thought"] = None
 
 
-tab1, tab2, tab3 = st.tabs(["Demo", "Research Overview", "Dataset"])
+tab1, tab2, tab3 = st.tabs(["Demo", "Research Overview", "Survey Responses"])
 
 with tab1:
     messages = st.session_state.messages
@@ -459,13 +459,12 @@ with tab2:
 
 
     st.write("## Abstract")
-    st.write("""This study investigates the use of Large Language Models (LLMs) for material selection in the product design process. Material selection is a crucial step in conceptual design due to its significant impact on the functionality, aesthetics, manufacturability, and sustainability impact of the final product. This research compares the performance of different LLMs against expert choices for various design scenarios. By collecting a dataset of expert material preferences, the study provides a basis for evaluating how well LLMs can align with expert recommendations through prompt engineering and hyperparameter tuning.
+    st.write("""Material selection is a crucial step in conceptual design due to its significant impact on the functionality, aesthetics, manufacturability, and sustainability impact of the final product. This study investigates the use of Large Language Models (LLMs) for material selection in the product design process and compares the performance of LLMs against expert choices for various design scenarios. By collecting a dataset of expert material preferences, the study provides a basis for evaluating how well LLMs can align with expert recommendations through prompt engineering and hyperparameter tuning.
 
-The research examines LLMs' biases towards certain materials and explores methods to guide LLMs toward outputs that match expert opinions more closely. The performance of LLMs is measured by the z-score and mean absolute error to expert data, across different model configurations, prompt strategies, and temperature settings. This approach allows for a detailed analysis of factors influencing the LLMs' effectiveness in recommending materials.
+The divergence between LLM and expert recommendations is measured across different model configurations, prompt strategies, and temperature settings. This approach allows for a detailed analysis of factors influencing the LLMs' effectiveness in recommending materials. The results from this study highlight two failure modes, and identify parallel prompting as a useful prompt-engineering method when using LLMs for material selection. The findings further suggest that, while LLMs can provide valuable assistance, their recommendations often vary significantly from those of human experts. This discrepancy underscores the need for further research into how LLMs can be better tailored to replicate expert decision-making in material selection.
 
-The results from this study highlight two failure modes, and highlight parallel prompting as a useful prompt-engineering method when using LLMs for material selection. The findings suggest that, while LLMs can provide valuable assistance, their recommendations often vary significantly from those of human experts. This discrepancy underscores the need for further research into how LLMs can be better tailored to replicate expert decision-making in material selection.
-
-In support of ongoing research, the dataset and code used in this study have been made available. This work contributes to the understanding of how LLMs can be integrated into the design process, offering insights into their current limitations and potential for future improvements.""")
+This work contributes to the growing body of knowledge on how LLMs can be integrated into the design process, offering insights into their current limitations and potential for future improvements.
+""")
 
 with tab3:
     st.write("# Survey Responses")
