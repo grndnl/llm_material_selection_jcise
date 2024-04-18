@@ -6,7 +6,7 @@ import uuid
 from langsmith.wrappers import wrap_openai
 import random
 import time
-
+import pandas as pd
 
 langsmith_client = Client()
 
@@ -213,7 +213,7 @@ if "score_chain_of_thought" not in st.session_state:
     st.session_state["score_chain_of_thought"] = None
 
 
-tab1, tab2 = st.tabs(["Demo", "Research Overview"])
+tab1, tab2, tab3 = st.tabs(["Demo", "Research Overview", "Dataset"])
 
 with tab1:
     messages = st.session_state.messages
@@ -466,7 +466,10 @@ The results from this study highlight two failure modes, and highlight parallel 
 
 In support of ongoing research, the dataset and code used in this study have been made available. This work contributes to the understanding of how LLMs can be integrated into the design process, offering insights into their current limitations and potential for future improvements.""")
 
+with tab3:
+    st.write("# Survey Responses")
+    st.write("The dataset collected from the expert survey responses used in this study is available for download [here](https://github.com/grndnl/llm_material_selection_jcise/tree/main/data).")
 
-
-# st.write("# Session state:")
-# st.write(st.session_state)
+    # load dataset
+    df = pd.read_csv("data/survey_responses_mapped.csv").dropna().reset_index(drop=True)
+    st.dataframe(df)
