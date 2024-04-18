@@ -47,7 +47,7 @@ def run_model(model, prior_messages):
             count = 0
             reasoning_question = compile_question(model, user_input=user_input, material=material, count=count)
             reasoning_question = {"role": "user", "content": reasoning_question}
-            reasoning = client.chat.completions.create(model="gpt-3.5-turbo-0125", messages=[reasoning_question])
+            reasoning = client.chat.completions.create(model="gpt-4-0125-preview", messages=[reasoning_question])
 
             count = 1
             run_id = st.session_state["run_id_chain_of_thought"]
@@ -77,7 +77,7 @@ few_shot = """
         Design: Bicycle Grip
         Criterion: Impact Resistant
         You are tasked with designing the grip of a bicycle frame which should be impact resistant.
-        How well do you think each of the provided materials would perform in this application? (Use a scale of 0-10 where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent')
+        How well do you think each of the provided materials would perform in this application? (Use a scale of 0-10 where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent.')
     
         Steel: 6 
         Aluminium: 5 
@@ -236,7 +236,8 @@ with tab1:
             messages.append({"role": "user", "content": prompt})
 
             time.sleep(0.5)
-            bot_message = "I will evaluate a set of materials on a scale of 0 to 10, where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent'."
+            bot_message = "I will evaluate a set of materials on a scale of 0 to 10, where 0 is 'unsatisfactory', 5 is 'acceptable', and 10 is 'excellent'.\n\n" \
+                          "Four different generation methods will be used, as described in the paper."
             display_messages.chat_message("assistant").write(bot_message)
             messages.append({"role": "assistant", "content": bot_message})
 
