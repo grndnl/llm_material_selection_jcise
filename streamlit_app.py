@@ -153,8 +153,8 @@ scores = {"👍": 1, "👎": 0}
 
 ########################################################################################################################
 with st.sidebar:
-    st.info("[View the repository for this project](https://github.com/grndnl/llm_material_selection_jcise)\n"
-            "[View the paper](https://arxiv.org/abs/2405.03695)")
+    st.info("[📂 View the code](https://github.com/grndnl/llm_material_selection_jcise)\n"
+            "[📄 View the paper](https://arxiv.org/abs/2405.03695)")
     st.info("**Data collection notice:**\n"
             "We collect and store the textual user input and any feedback selected by the user. ")
 
