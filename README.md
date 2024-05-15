@@ -1,5 +1,5 @@
 # Evaluating Large Language Models for Material Selection
-[📄 Paper link](to be added)
+[📄 Paper link](https://arxiv.org/abs/2405.03695)
 
 [🧊 Demo website](https://material-selection-llms.streamlit.app/)
 
