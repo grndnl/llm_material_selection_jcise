@@ -8,5 +8,5 @@
 /generation/MechGPT-13b_v106C/tokenizer.model
 /generation/MechGPT-13b_v106C/added_tokens.json
 /generation/MechGPT-13b_v106C/special_tokens_map.json
-**/**/checkpoint.ipynb
+**/**checkpoint.ipynb
 /.streamlit/secrets.toml
